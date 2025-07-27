@@ -1,0 +1,1636 @@
+- id: 1698661268802_optimized
+  alias: Balkontür Steuerung (Ganzjährig)
+  description: Zusammengeführte Sommer/Winter Steuerung für Balkontür
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.eve_door_20ebn9901_tur_2
+    for: 00:00:15
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ now().strftime(''%m%d'') >= ''1001'' or now().strftime(''%m%d'')
+          <= ''0331'' }}'
+      sequence:
+      - if: '{{ trigger.to_state.state == ''on'' }}'
+        then:
+        - service: climate.set_hvac_mode
+          target:
+            device_id: 6e79211259b2c269b00c3f0650aac95d
+          data:
+            hvac_mode: 'off'
+        - service: notify.mobile_app_iphone_dom
+          data:
+            message: Die Balkontür ist offen!
+        else:
+        - if:
+          - condition: or
+            conditions:
+            - condition: state
+              entity_id: calendar.feiertage
+              state: 'on'
+            - condition: time
+              weekday:
+              - sat
+              - sun
+          then:
+          - service: climate.set_preset_mode
+            target:
+              device_id: 6e79211259b2c269b00c3f0650aac95d
+            data:
+              preset_mode: eco
+          - service: notify.mobile_app_iphone_dom
+            data:
+              message: Die Balkontür ist zu!
+          else:
+          - if:
+            - condition: device
+              type: is_on
+              device_id: 4898efb54140de5fbe931d17d557e3c3
+              entity_id: 1539f186909241a16de2b99e8d9f9c04
+              domain: switch
+            - condition: numeric_state
+              entity_id: sensor.balkonkraftwerk_temperatur
+              below: 10
+            then:
+            - service: climate.set_temperature
+              target:
+                device_id: 6e79211259b2c269b00c3f0650aac95d
+              data:
+                temperature: 21.5
+            - service: notify.mobile_app_iphone_dom
+              data:
+                message: Die Balkontür ist zu!
+            else:
+            - service: climate.set_preset_mode
+              target:
+                device_id: 6e79211259b2c269b00c3f0650aac95d
+              data:
+                preset_mode: eco
+            - service: notify.mobile_app_iphone_dom
+              data:
+                message: Die Balkontür ist zu!
+    - conditions:
+      - condition: template
+        value_template: '{{ now().strftime(''%m%d'') >= ''0401'' and now().strftime(''%m%d'')
+          <= ''0930'' }}'
+      sequence:
+      - service: notify.mobile_app_iphone_dom
+        data:
+          message: "{% if trigger.to_state.state == 'on' %}\n  Die Balkontür ist offen!\n{%
+            else %}\n  Die Balkontür ist zu!\n{% endif %}\n"
+  mode: single
+- id: 1698663807910_optimized
+  alias: Wohnzimmerfenster Steuerung (Ganzjährig)
+  description: Zusammengeführte Sommer/Winter Steuerung für Wohnzimmerfenster
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.eve_door_20ebn9901_tur_3
+    - binary_sensor.eve_door_20ebn9901_tur
+    for: 00:00:15
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ now().strftime(''%m%d'') >= ''1001'' or now().strftime(''%m%d'')
+          <= ''0331'' }}'
+      sequence:
+      - if:
+        - condition: or
+          conditions:
+          - condition: state
+            entity_id: binary_sensor.eve_door_20ebn9901_tur_3
+            state: 'on'
+          - condition: state
+            entity_id: binary_sensor.eve_door_20ebn9901_tur
+            state: 'on'
+        then:
+        - service: climate.set_hvac_mode
+          target:
+            device_id: 6cc2083d16cf20d73a015fe93c034ff8
+          data:
+            hvac_mode: 'off'
+        - service: climate.set_hvac_mode
+          target:
+            device_id: 1cc26dc3303fabf3535e506d78cfa1e6
+          data:
+            hvac_mode: 'off'
+        - service: notify.mobile_app_iphone_dom
+          data:
+            message: Wohnzimmerfenster ist offen!
+        else:
+        - service: climate.set_hvac_mode
+          target:
+            device_id: 6cc2083d16cf20d73a015fe93c034ff8
+          data:
+            hvac_mode: heat
+        - service: climate.set_hvac_mode
+          target:
+            device_id: 1cc26dc3303fabf3535e506d78cfa1e6
+          data:
+            hvac_mode: heat
+        - service: notify.mobile_app_iphone_dom
+          data:
+            message: Wohnzimmerfenster ist geschlossen!
+    - conditions:
+      - condition: template
+        value_template: '{{ now().strftime(''%m%d'') >= ''0401'' and now().strftime(''%m%d'')
+          <= ''0930'' }}'
+      sequence:
+      - service: notify.mobile_app_iphone_dom
+        data:
+          message: "{% if states('binary_sensor.eve_door_20ebn9901_tur_3') == 'on'
+            or states('binary_sensor.eve_door_20ebn9901_tur') == 'on' %}\n  Wohnzimmerfenster
+            ist offen!\n{% else %}\n  Wohnzimmerfenster geschlossen!\n{% endif %}\n"
+  mode: single
+- id: 1698663936433_optimized
+  alias: Schlafzimmerfenster Steuerung (Ganzjährig)
+  description: Zusammengeführte Sommer/Winter Steuerung für Schlafzimmerfenster
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.schlafzimmerfenster_tur_6
+    for: 00:00:15
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ now().strftime(''%m%d'') >= ''1001'' or now().strftime(''%m%d'')
+          <= ''0331'' }}'
+      sequence:
+      - if: '{{ trigger.to_state.state == ''on'' }}'
+        then:
+        - service: climate.set_hvac_mode
+          target:
+            device_id: 87e4d946f40cf9214e2105700d1d7b6c
+          data:
+            hvac_mode: 'off'
+        - service: notify.mobile_app_iphone_dom
+          data:
+            message: Das Schlafzimmerfenster ist offen!
+        else:
+        - if:
+          - condition: time
+            after: 06:00:00
+            before: '20:59:00'
+          then:
+          - service: climate.set_hvac_mode
+            target:
+              device_id: 87e4d946f40cf9214e2105700d1d7b6c
+            data:
+              hvac_mode: heat
+          - service: notify.mobile_app_iphone_dom
+            data:
+              message: Das Schlafzimmerfenster ist zu!
+          else:
+          - service: climate.set_hvac_mode
+            target:
+              device_id: 87e4d946f40cf9214e2105700d1d7b6c
+            data:
+              hvac_mode: 'off'
+    - conditions:
+      - condition: template
+        value_template: '{{ now().strftime(''%m%d'') >= ''0401'' and now().strftime(''%m%d'')
+          <= ''0930'' }}'
+      sequence:
+      - service: notify.mobile_app_iphone_dom
+        data:
+          message: "{% if trigger.to_state.state == 'on' %}\n  Das Schlafzimmerfenster
+            ist offen!\n{% else %}\n  Das Schlafzimmerfenster ist zu!\n{% endif %}\n"
+  mode: single
+- id: 1698664059279_optimized
+  alias: Küchenfenster Steuerung (Ganzjährig)
+  description: Zusammengeführte Sommer/Winter Steuerung für Küchenfenster
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.eve_door_20ebn9901_tur_4
+    for: 00:00:15
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ now().strftime(''%m%d'') >= ''1001'' or now().strftime(''%m%d'')
+          <= ''0331'' }}'
+      sequence:
+      - if: '{{ trigger.to_state.state == ''on'' }}'
+        then:
+        - service: climate.set_hvac_mode
+          target:
+            device_id: 6155326fa9ffc4a7cb5d2ddf23552e33
+          data:
+            hvac_mode: 'off'
+        - service: notify.mobile_app_iphone_dom
+          data:
+            message: Das Küchenfenster ist offen!
+        else:
+        - service: climate.set_hvac_mode
+          target:
+            device_id: 6155326fa9ffc4a7cb5d2ddf23552e33
+          data:
+            hvac_mode: heat
+        - service: notify.mobile_app_iphone_dom
+          data:
+            message: Das Küchenfenster ist zu!
+    - conditions:
+      - condition: template
+        value_template: '{{ now().strftime(''%m%d'') >= ''0401'' and now().strftime(''%m%d'')
+          <= ''0930'' }}'
+      sequence:
+      - service: notify.mobile_app_iphone_dom
+        data:
+          message: "{% if trigger.to_state.state == 'on' %}\n  Das Küchenfenster ist
+            offen!\n{% else %}\n  Das Küchenfenster ist zu!\n{% endif %}\n"
+  mode: single
+- id: 1698664231109_optimized
+  alias: Badezimmerfenster Steuerung (Ganzjährig)
+  description: Zusammengeführte Sommer/Winter Steuerung für Badezimmerfenster
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.eve_door_20ebn9901_tur_5
+    for: 00:00:15
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ now().strftime(''%m%d'') >= ''1001'' or now().strftime(''%m%d'')
+          <= ''0331'' }}'
+      sequence:
+      - if: '{{ trigger.to_state.state == ''on'' }}'
+        then:
+        - service: climate.set_hvac_mode
+          target:
+            device_id: 3bd7c7bed5b2ff49af10a9d4295d26eb
+          data:
+            hvac_mode: 'off'
+        - service: notify.mobile_app_iphone_dom
+          data:
+            message: Das Badezimmerfenster ist offen!
+        else:
+        - service: climate.set_hvac_mode
+          target:
+            device_id: 3bd7c7bed5b2ff49af10a9d4295d26eb
+          data:
+            hvac_mode: heat
+        - service: notify.mobile_app_iphone_dom
+          data:
+            message: Das Badezimmerfenster ist zu!
+    - conditions:
+      - condition: template
+        value_template: '{{ now().strftime(''%m%d'') >= ''0401'' and now().strftime(''%m%d'')
+          <= ''0930'' }}'
+      sequence:
+      - service: notify.mobile_app_iphone_dom
+        data:
+          message: "{% if trigger.to_state.state == 'on' %}\n  Das Badezimmerfenster
+            ist offen!\n{% else %}\n  Das Badezimmerfenster ist geschlossen!\n{% endif
+            %}\n"
+  mode: single
+- id: 1698667306734_optimized
+  alias: Toilettenfenster Steuerung (Ganzjährig)
+  description: Zusammengeführte Sommer/Winter Steuerung für Toilettenfenster
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.toilettenfenster_tur_6
+    for: 00:00:15
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ now().strftime(''%m%d'') >= ''1001'' or now().strftime(''%m%d'')
+          <= ''0331'' }}'
+      sequence:
+      - if: '{{ trigger.to_state.state == ''on'' }}'
+        then:
+        - service: climate.set_hvac_mode
+          target:
+            device_id: 0384b94baeeb942b880965450c984a2b
+          data:
+            hvac_mode: 'off'
+        - service: notify.mobile_app_iphone_dom
+          data:
+            message: Das Toilettenfenster ist offen!
+        else:
+        - service: climate.set_hvac_mode
+          target:
+            device_id: 0384b94baeeb942b880965450c984a2b
+          data:
+            hvac_mode: heat
+        - service: notify.mobile_app_iphone_dom
+          data:
+            message: Das Toilettenfenster ist zu!
+    - conditions:
+      - condition: template
+        value_template: '{{ now().strftime(''%m%d'') >= ''0401'' and now().strftime(''%m%d'')
+          <= ''0930'' }}'
+      sequence:
+      - service: notify.mobile_app_iphone_dom
+        data:
+          message: "{% if trigger.to_state.state == 'on' %}\n  Das Toilettenfenster
+            ist offen!\n{% else %}\n  Das Toilettenfenster ist zu!\n{% endif %}\n"
+  mode: single
+- id: 1698669543638_optimized
+  alias: Intelligente Wohnzimmer Beleuchtung
+  description: Zusammengeführte Lichtsteuerung mit Kino-Modus und adaptiver Beleuchtung
+  triggers:
+  - entity_id:
+    - sensor.feuermelder_wohnzimmer_illuminance
+    below: 9
+    trigger: numeric_state
+  - entity_id: switch.tv_area
+    to: 'on'
+    trigger: state
+  - entity_id: media_player.appletv
+    to:
+    - idle
+    - paused
+    - 'off'
+    - standby
+    trigger: state
+  - entity_id: media_player.appletv
+    to: playing
+    trigger: state
+  - entity_id:
+    - sensor.feuermelder_wohnzimmer_illuminance
+    trigger: numeric_state
+    above: 10
+  conditions:
+  - condition: state
+    entity_id: switch.tv_area
+    state: 'on'
+  actions:
+  - delay: 00:00:05
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: media_player.appletv
+        state: playing
+      - condition: state
+        entity_id: light.lichtschlauch_heizung
+        state: 'on'
+      - condition: state
+        entity_id: light.lichtschlauch_tv_area
+        state: 'on'
+      - condition: state
+        entity_id: light.stehlampe_wohnzimmer
+        state: 'on'
+      sequence:
+      - data:
+          kelvin: 2000
+          brightness_pct: 5
+          transition: 2
+        action: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.feuermelder_wohnzimmer_illuminance
+        below: 9
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: media_player.appletv
+          state: standby
+        - condition: state
+          entity_id: media_player.appletv
+          state: 'off'
+        - condition: state
+          entity_id: media_player.appletv
+          state: idle
+        - condition: state
+          entity_id: media_player.appletv
+          state: paused
+      sequence:
+      - action: light.turn_on
+        data: {}
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+      - data:
+          lights:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+          adapt_brightness: true
+          adapt_color: true
+          transition: '4'
+        action: adaptive_lighting.apply
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.feuermelder_wohnzimmer_illuminance
+        above: 10
+      sequence:
+      - action: light.turn_off
+        data: {}
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+  mode: single
+- id: 1739109009705_optimized
+  alias: Hue Dimmer Switch Steuerung
+  description: Zusammengeführte Hue Dimmer Switch Steuerung
+  triggers:
+  - device_id: 2b66d7bb15811a69296aa92ff093d714
+    domain: mqtt
+    type: action
+    subtype: on_press
+    trigger: device
+  - domain: mqtt
+    device_id: 2b66d7bb15811a69296aa92ff093d714
+    type: action
+    subtype: on_press_release
+    trigger: device
+  - domain: mqtt
+    device_id: 2b66d7bb15811a69296aa92ff093d714
+    type: action
+    subtype: off_press
+    trigger: device
+  - domain: mqtt
+    device_id: 2b66d7bb15811a69296aa92ff093d714
+    type: action
+    subtype: off_press_release
+    trigger: device
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - on_press
+      sequence:
+      - if:
+        - condition: state
+          entity_id: light.lichtschlauch_heizung
+          state: 'off'
+        - condition: state
+          entity_id: light.lichtschlauch_tv_area
+          state: 'off'
+        - condition: state
+          entity_id: light.stehlampe_wohnzimmer
+          state: 'off'
+        then:
+        - action: light.turn_on
+          data: {}
+          target:
+            entity_id:
+            - light.lichtschlauch_heizung
+            - light.lichtschlauch_tv_area
+            - light.stehlampe_wohnzimmer
+        - data:
+            lights:
+            - light.0x001788010b4921f9
+            - light.0x0017880109bf725d
+            - light.0x001788010b99a29a
+            adapt_brightness: true
+            adapt_color: true
+          action: adaptive_lighting.apply
+        else:
+        - action: light.turn_off
+          data: {}
+          target:
+            entity_id:
+            - light.lichtschlauch_heizung
+            - light.lichtschlauch_tv_area
+            - light.stehlampe_wohnzimmer
+    - conditions:
+      - condition: trigger
+        id:
+        - turn_off
+      sequence:
+      - data:
+          lights:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+          adapt_brightness: true
+          adapt_color: true
+        action: adaptive_lighting.apply
+    - conditions:
+      - condition: trigger
+        id:
+        - dim_up
+      sequence:
+      - data:
+          brightness_step_pct: 10
+        action: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+    - conditions:
+      - condition: trigger
+        id:
+        - dim_down
+      sequence:
+      - data:
+          brightness_step_pct: -10
+        action: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+  mode: single
+- id: 1726597223559_optimized
+  alias: TV Area Steuerung
+  description: Zusammengeführte TV Area Ein/Aus Steuerung
+  triggers:
+  - entity_id: switch.tv_area
+    to:
+    - 'on'
+    - 'off'
+    trigger: state
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: switch.tv_area
+        state: 'on'
+      sequence:
+      - target:
+          device_id: 61a40e3ca95bf07befbd67071c39d40f
+        action: switch.turn_on
+        data: {}
+      - if:
+        - condition: time
+          after: 08:00:00
+          before: '13:00:00'
+        - condition: or
+          conditions:
+          - condition: time
+            weekday:
+            - sat
+            - sun
+          - condition: state
+            entity_id: calendar.deutschland_bw_2
+            state: 'on'
+        then:
+        - delay: 00:02:30
+        - target:
+            device_id: 82a5f44a13c402da552413757874303c
+          action: media_player.turn_on
+          data: {}
+        - delay: 00:00:05
+        - target:
+            device_id: 0e5ee8a256f7152296eefc09819d47e1
+          data:
+            media_content_id: Alexa, spiele egoFM Radio
+            media_content_type: custom
+          action: media_player.play_media
+        - delay: 00:00:05
+        - target:
+            device_id: 0e5ee8a256f7152296eefc09819d47e1
+          data:
+            volume_level: 0.1
+          action: media_player.volume_set
+    - conditions:
+      - condition: state
+        entity_id: switch.tv_area
+        state: 'off'
+      sequence:
+      - target:
+          device_id: 61a40e3ca95bf07befbd67071c39d40f
+        action: switch.turn_off
+        data: {}
+  mode: single
+- id: '1698668772384'
+  alias: Homeoffice Steuerung
+  description: Homeoffice Ein/Aus basierend auf Leistungsverbrauch
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.homeoffice_leistung
+    below: 10
+    for: 00:03:00
+  - platform: state
+    entity_id: switch.homeoffice
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.homeoffice_leistung
+        below: 10
+      - condition: template
+        value_template: "{{ (as_timestamp(now()) - as_timestamp(states.switch.homeoffice.last_changed)) > 300 }}"
+      sequence:
+      - service: switch.turn_off
+        target:
+          device_id: 4898efb54140de5fbe931d17d557e3c3
+      - service: climate.set_preset_mode
+        target:
+          device_id: 6e79211259b2c269b00c3f0650aac95d
+        data:
+          preset_mode: eco
+    - conditions:
+      - condition: state
+        entity_id: switch.homeoffice
+        state: 'on'
+      - condition: numeric_state
+        entity_id: sensor.balkonkraftwerk_temperatur
+        below: 10
+      - condition: template
+        value_template: '{{ now().strftime(''%m%d'') >= ''1001'' or now().strftime(''%m%d'')
+          <= ''0514'' }}'
+      sequence:
+      - service: climate.set_temperature
+        target:
+          device_id: 6e79211259b2c269b00c3f0650aac95d
+        data:
+          temperature: 21.5
+  mode: single
+- id: '2025010720'
+  alias: 🎬 Kinofeeling Automatisierung
+  description: Vollständige Kino-Erfahrung mit Hue Play Leuchten und Soundbar
+  triggers:
+  - entity_id: media_player.appletv
+    to: playing
+    trigger: state
+  - entity_id: media_player.appletv
+    to: paused
+    trigger: state
+  - entity_id: media_player.appletv
+    to: 
+    - idle
+    - 'off'
+    - standby
+    trigger: state
+  conditions:
+  - condition: state
+    entity_id: switch.tv_area
+    state: 'on'
+  - condition: time
+    after: '18:00:00'
+    before: '02:00:00'
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: media_player.appletv
+        state: playing
+      - condition: template
+        value_template: "{{ trigger.from_state.state != 'playing' }}"
+      sequence:
+      - service: notify.mobile_app_iphone_dom
+        data:
+          title: "🎬 Kino-Modus aktiviert"
+          message: "Film startet - Kinofeeling wird vorbereitet!"
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+        data:
+          media_content_id: "Alexa, spiele Kino Trailer Musik"
+          media_content_type: custom
+      - service: media_player.volume_set
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+        data:
+          volume_level: 0.3
+      - delay: 00:00:03
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+        data:
+          brightness_pct: 100
+          rgb_color: [255, 0, 0]
+          transition: 2
+      - delay: 00:00:02
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+        data:
+          brightness_pct: 50
+          rgb_color: [0, 0, 255]
+          transition: 1
+      - delay: 00:00:02
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+        data:
+          brightness_pct: 20
+          rgb_color: [255, 215, 0]
+          transition: 1
+      - delay: 00:00:05
+      - service: media_player.media_stop
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+      - delay: 00:00:01
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+        data:
+          brightness_pct: 5
+          kelvin: 2000
+          transition: 3
+      - service: notify.mobile_app_iphone_dom
+        data:
+          title: "🍿 Kino bereit!"
+          message: "Viel Spaß beim Film! Beleuchtung auf Kino-Modus gesetzt."
+    - conditions:
+      - condition: state
+        entity_id: media_player.appletv
+        state: paused
+      sequence:
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+        data:
+          brightness_pct: 30
+          kelvin: 3000
+          transition: 2
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: media_player.appletv
+          state: idle
+        - condition: state
+          entity_id: media_player.appletv
+          state: 'off'
+        - condition: state
+          entity_id: media_player.appletv
+          state: standby
+      sequence:
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+        data:
+          media_content_id: "Alexa, spiele entspannende Musik"
+          media_content_type: custom
+      - service: media_player.volume_set
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+        data:
+          volume_level: 0.15
+      - delay: 00:00:02
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+        data:
+          brightness_pct: 80
+          rgb_color: [255, 165, 0]
+          transition: 4
+      - delay: 00:00:10
+      - service: media_player.media_stop
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+      - data:
+          lights:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+          adapt_brightness: true
+          adapt_color: true
+          transition: '5'
+        action: adaptive_lighting.apply
+      - service: notify.mobile_app_iphone_dom
+        data:
+          title: "🎬 Kino-Modus beendet"
+          message: "Film beendet - Beleuchtung zurück auf normal."
+  mode: single
+- id: '2025010721'
+  alias: 🎭 Erweiterte Kino-Szenen
+  description: Spezielle Lichteffekte für verschiedene Film-Genres
+  triggers:
+  - platform: event
+    event_type: ios.action_fired
+    event_data:
+      actionName: "Actionfilm"
+  - platform: event
+    event_type: ios.action_fired
+    event_data:
+      actionName: "Romantikfilm"
+  - platform: event
+    event_type: ios.action_fired
+    event_data:
+      actionName: "Horrorfilm"
+  - platform: event
+    event_type: ios.action_fired
+    event_data:
+      actionName: "Komödie"
+  conditions:
+  - condition: state
+    entity_id: switch.tv_area
+    state: 'on'
+  actions:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.actionName == 'Actionfilm' }}"
+      sequence:
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+        data:
+          media_content_id: "Alexa, spiele Action Movie Soundtrack"
+          media_content_type: custom
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+        data:
+          brightness_pct: 100
+          rgb_color: [255, 0, 0]
+          transition: 1
+      - delay: 00:00:01
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+        data:
+          brightness_pct: 10
+          rgb_color: [255, 69, 0]
+          transition: 2
+      - delay: 00:00:08
+      - service: media_player.media_stop
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+    - conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.actionName == 'Romantikfilm' }}"
+      sequence:
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+        data:
+          media_content_id: "Alexa, spiele romantische Musik"
+          media_content_type: custom
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+        data:
+          brightness_pct: 40
+          rgb_color: [255, 192, 203]
+          transition: 3
+      - delay: 00:00:08
+      - service: media_player.media_stop
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+    - conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.actionName == 'Horrorfilm' }}"
+      sequence:
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+        data:
+          media_content_id: "Alexa, spiele gruselige Geräusche"
+          media_content_type: custom
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+        data:
+          brightness_pct: 5
+          rgb_color: [128, 0, 128]
+          transition: 4
+      - delay: 00:00:08
+      - service: media_player.media_stop
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+    - conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.actionName == 'Komödie' }}"
+      sequence:
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+        data:
+          media_content_id: "Alexa, spiele fröhliche Musik"
+          media_content_type: custom
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.lichtschlauch_heizung
+          - light.lichtschlauch_tv_area
+          - light.stehlampe_wohnzimmer
+        data:
+          brightness_pct: 60
+          rgb_color: [255, 255, 0]
+          transition: 2
+      - delay: 00:00:08
+      - service: media_player.media_stop
+        target:
+          entity_id: media_player.dominik_s_samsung_soundbar_q990c_3
+  mode: single
+- id: '1698669343258'
+  alias: Spülmaschine fertig
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.geschirrspuler_programm_fortschritt
+    to: '100'
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_dom
+    data:
+      message: 'Die Spülmaschine ist fertig :) '
+  - service: notify.mobile_app_ipad_von_franklins
+    data:
+      message: 'Die Spülmaschine ist fertig :) '
+  mode: single
+- id: '1705422999062'
+  alias: Waschmaschine fertig
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.fritz_dect_200_19_leistung
+    below: 1.9
+    for: 00:03:00
+  condition: []
+  action:
+  - service: switch.turn_off
+    target:
+      device_id: 1ca1260a1d5dc1b1b8157236fc1b1689
+  mode: single
+- id: '1698881352350'
+  alias: Update verfügbar
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - update.home_assistant_core_update
+    - update.home_assistant_operating_system_update
+    - update.home_assistant_supervisor_update
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_dom
+    data:
+      message: Ein HomeAssistant Update ist verfügbar!
+  mode: single
+- id: '1698932143325'
+  alias: Batteriecheck
+  description: ''
+  use_blueprint:
+    path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
+    input:
+      threshold: 10
+      actions:
+      - service: notify.mobile_app_iphone_dom
+        data:
+          message: Achtung! Ein Gerät hat weniger als 10% Batterie
+      exclude:
+        entity_id:
+        - sensor.henriette_battery
+- id: '1729361372804'
+  alias: Speicherung Wäschezyklen
+  description: ''
+  trigger:
+  - platform: time
+    at: 00:00:00
+  condition: []
+  action:
+  - service: counter.reset
+    target:
+      entity_id: counter.wasche_zyklen
+- id: '1751222946870'
+  alias: Zeit zu Lüften
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.balkonkraftwerk_temperatur
+    below: sensor.minimale_innentemperatur
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_dom
+    data:
+      message: Zeit zu lüften! Außentemperatur kühler als Innentemperatur
+  - service: notify.mobile_app_ipad_von_franklins
+    data:
+      message: Zeit zu lüften! Außentemperatur kühler als Innentemperatur
+  mode: single
+- id: '1751223358450'
+  alias: Zeit die Fenster zu schließen
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.balkonkraftwerk_temperatur
+    above: sensor.minimale_innentemperatur
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_dom
+    data:
+      message: Zeit die Fenster zu schließen! Außentemperatur höher als Innentemperatur
+  - service: notify.mobile_app_ipad_von_franklins
+    data:
+      message: Zeit die Fenster zu schließen! Außentemperatur höher als Innentemperatur
+  mode: single
+- id: '1751887506007'
+  alias: Rauchalarm - Alle Twinguards alarmieren und benachrichtigen
+  description: ''
+  triggers:
+  - entity_id:
+    - select.feuermelder_arbeitszimmer_alarm
+    - select.feuermelder_wohnzimmer_alarm
+    - select.feuermelder_schlafzimmer_alarm
+    to: 'on'
+    trigger: state
+  conditions: []
+  actions:
+  - data:
+      option: fire
+    action: select.select_option
+    target:
+      entity_id:
+      - select.feuermelder_arbeitszimmer_alarm
+      - select.feuermelder_schlafzimmer_alarm
+      - select.feuermelder_wohnzimmer_alarm
+  - data:
+      title: "\U0001F525 RAUCHALARM! \U0001F525"
+      message: 'Rauch erkannt im Raum: {{ trigger.to_state.attributes.friendly_name
+        | replace(" Smoke", "") }}'
+    action: notify.mobile_app_iphone_dom
+  - data:
+      title: "\U0001F525 RAUCHALARM! \U0001F525"
+      message: 'Rauch erkannt im Raum: {{ trigger.to_state.attributes.friendly_name
+        | replace(" Smoke", "") }}'
+    action: notify.mobile_app_ipad_von_franklins
+  mode: single
+- id: '1745518528964'
+  alias: Waschmaschine Benachrichtigung
+  description: ''
+  use_blueprint:
+    path: Blackshome/appliance-notifications.yaml
+    input:
+      power_sensor: sensor.fritz_dect_200_19_leistung
+      end_appliance_power: 2
+      end_time_delay: 3
+      include_start_notify: enable_start_notify_options
+      start_notify_device:
+      - 89b52da6c33faee768fe709d3af69c9e
+      include_end_notify: enable_end_notify_options
+      end_notify_device:
+      - 89b52da6c33faee768fe709d3af69c9e
+      include_power_tracking: disable_power_tracking
+      power_consumption_sensor: sensor.fritz_dect_200_19_energie
+      include_duration_tracking: enable_duration_tracking
+- id: '1746881911001'
+  alias: Heizung Arbeitszimmer
+  description: ''
+  use_blueprint:
+    path: panhans/advanced_heating_control.yaml
+    input:
+      input_trvs:
+      - climate.arbeitszimmer
+      input_hvac_mode: heat
+      input_temperature_sensor: sensor.feuermelder_arbeitszimmer_temperature
+      input_temperature_comfort_static: 21
+      input_temperature_eco_static: 18
+      input_off_if_nobody_home: true
+      input_off_if_above_room_temperature: true
+      input_persons:
+      - person.domininik
+      - person.sina_marie
+      input_windows:
+      - binary_sensor.eve_door_20ebn9901_tur_2
+      input_windows_reaction_time_open:
+        hours: 0
+        minutes: 0
+        seconds: 15
+      input_windows_reaction_time_close:
+        hours: 0
+        minutes: 0
+        seconds: 15
+      input_mode_outside_temperature: sensor.balkonkraftwerk_temperatur
+      input_mode_outside_temperature_threshold: 10
+      input_custom_condition:
+      - condition: and
+        conditions:
+        - condition: device
+          type: is_on
+          device_id: 4898efb54140de5fbe931d17d557e3c3
+          entity_id: 1539f186909241a16de2b99e8d9f9c04
+          domain: switch
+        - condition: numeric_state
+          entity_id: sensor.balkonkraftwerk_temperatur
+          below: 10
+      input_schedulers: []
+      input_adjustments:
+      - time: '22:30'
+        mode: eco
+      - time: 06:30
+        mode: comfort
+- id: '1746883814800'
+  alias: "\U0001F525 Heizung Badezimmer"
+  description: ''
+  use_blueprint:
+    path: panhans/advanced_heating_control.yaml
+    input:
+      input_trvs:
+      - climate.badezimmer
+      input_temperature_eco_static: 18
+      input_adjustments:
+      - time: 06:00
+        mode: comfort
+      - time: 09:00
+        mode: eco
+      - time: '18:00'
+        mode: comfort
+      - time: '20:00'
+        mode: eco
+      - time: '22:00'
+        mode: comfort
+      - time: '23:30'
+        mode: eco
+      input_persons:
+      - person.domininik
+      - person.sina_marie
+      input_windows:
+      - binary_sensor.badezimmer_offenes_fenster_erkannt
+      input_windows_reaction_time_open:
+        hours: 0
+        minutes: 0
+        seconds: 15
+      input_windows_reaction_time_close:
+        hours: 0
+        minutes: 0
+        seconds: 15
+      input_temperature_sensor: sensor.temperatursensor_badezimmer_temperature
+      input_temperature_comfort_static: 22
+      input_mode_outside_temperature: sensor.balkonkraftwerk_temperatur
+- id: '1746884083509'
+  alias: Heizung Toilette
+  description: ''
+  use_blueprint:
+    path: panhans/advanced_heating_control.yaml
+    input:
+      input_trvs:
+      - climate.toilette
+      input_temperature_eco_static: 18
+      input_adjustments:
+      - time: 06:00
+        mode: comfort
+      - time: 09:00
+        mode: eco
+      - time: '18:00'
+        mode: comfort
+      - time: '20:00'
+        mode: eco
+      - time: '22:00'
+        mode: comfort
+      - time: '23:30'
+        mode: eco
+      input_persons:
+      - person.domininik
+      - person.sina_marie
+      input_windows:
+      - binary_sensor.toilettenfenster_tur_6
+      input_windows_reaction_time_open:
+        hours: 0
+        minutes: 0
+        seconds: 15
+      input_windows_reaction_time_close:
+        hours: 0
+        minutes: 0
+        seconds: 15
+      input_temperature_comfort_static: 20
+      input_mode_outside_temperature: sensor.balkonkraftwerk_temperatur
+      input_temperature_sensor: sensor.temperatursensor_toilette_temperature
+- id: '1746884202225'
+  alias: Heizung Küche
+  description: ''
+  use_blueprint:
+    path: panhans/advanced_heating_control.yaml
+    input:
+      input_trvs:
+      - climate.kuche
+      input_temperature_eco_static: 18
+      input_adjustments:
+      - time: 06:00
+        mode: comfort
+      - time: 09:00
+        mode: eco
+      - time: '18:00'
+        mode: comfort
+      - time: '20:00'
+        mode: eco
+      - time: '22:00'
+        mode: comfort
+      - time: '23:30'
+        mode: eco
+      input_persons:
+      - person.domininik
+      - person.sina_marie
+      input_windows:
+      - binary_sensor.eve_door_20ebn9901_tur_4
+      input_windows_reaction_time_open:
+        hours: 0
+        minutes: 0
+        seconds: 15
+      input_windows_reaction_time_close:
+        hours: 0
+        minutes: 0
+        seconds: 15
+      input_temperature_comfort_static: 20
+      input_mode_outside_temperature: sensor.balkonkraftwerk_temperatur
+      input_temperature_sensor: sensor.temperatursensor_kuche_temperature
+- id: '1746884424487'
+  alias: Heizung Wohnzimmer
+  description: ''
+  use_blueprint:
+    path: panhans/advanced_heating_control.yaml
+    input:
+      input_trvs:
+      - climate.wohnzimmer_gross
+      - climate.wohnzimmer_klein
+      input_temperature_eco_static: 19
+      input_adjustments:
+      - time: 06:00
+        mode: comfort
+      - time: 09:00
+        mode: eco
+      - time: '17:00'
+        mode: comfort
+      - time: '23:30'
+        mode: eco
+      input_persons:
+      - person.domininik
+      - person.sina_marie
+      input_windows:
+      - binary_sensor.wohnzimmer_gross_offenes_fenster_erkannt
+      - binary_sensor.eve_door_20ebn9901_tur
+      input_windows_reaction_time_open:
+        hours: 0
+        minutes: 0
+        seconds: 15
+      input_windows_reaction_time_close:
+        hours: 0
+        minutes: 0
+        seconds: 15
+      input_temperature_comfort_static: 21.5
+      input_mode_outside_temperature: sensor.balkonkraftwerk_temperatur
+      input_temperature_sensor: sensor.feuermelder_wohnzimmer_temperature
+- id: '1746884802024'
+  alias: Heizung Schlafzimmer
+  description: ''
+  use_blueprint:
+    path: panhans/advanced_heating_control.yaml
+    input:
+      input_trvs:
+      - climate.schlafzimmer
+      input_temperature_sensor: sensor.feuermelder_schlafzimmer_temperature
+      input_temperature_comfort_static: 21.5
+      input_temperature_eco_static: 17
+      input_adjustments:
+      - time: '22:00'
+        mode: eco
+        calibration: 'off'
+      - time: 09:00
+        mode: comfort
+        calibration: 'on'
+      input_persons:
+      - person.domininik
+      - person.sina_marie
+      input_windows:
+      - binary_sensor.schlafzimmerfenster_tur_6
+      input_windows_reaction_time_open:
+        hours: 0
+        minutes: 0
+        seconds: 15
+      input_windows_reaction_time_close:
+        hours: 0
+        minutes: 0
+        seconds: 15
+- id: '1705671276506'
+  alias: Schlafzimmer abkühlen
+  description: ''
+  trigger:
+  - platform: time
+    at: '22:00:00'
+  condition:
+  - condition: time
+    after: '22:00:00'
+    before: 08:00:00
+  action:
+  - service: climate.set_preset_mode
+    target:
+      device_id: 87e4d946f40cf9214e2105700d1d7b6c
+    data:
+      preset_mode: eco
+  mode: single
+- id: '2025010701'
+  alias: Intelligente Lüftungsempfehlung basierend auf CO2
+  description: Benachrichtigung bei hohen CO2-Werten in verschiedenen Räumen
+  triggers:
+  - entity_id:
+    - sensor.feuermelder_wohnzimmer_co2
+    - sensor.feuermelder_arbeitszimmer_co2
+    - sensor.feuermelder_schlafzimmer_co2
+    above: 1000
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+    trigger: numeric_state
+  conditions: []
+  actions:
+  - data:
+      title: "\U0001F4A8 Lüftungsempfehlung"
+      message: 'CO2-Wert in {{ trigger.to_state.attributes.friendly_name | replace(''CO2'',
+        '''') }}  ist {{ trigger.to_state.state }} ppm. Zeit zu lüften!
+
+        '
+    action: notify.mobile_app_iphone_dom
+  mode: single
+- id: '2025010702'
+  alias: VOC Warnung bei kritischen Werten
+  description: Warnung bei schlechter Luftqualität durch VOC-Belastung
+  triggers:
+  - entity_id:
+    - sensor.feuermelder_wohnzimmer_voc
+    - sensor.feuermelder_arbeitszimmer_voc
+    - sensor.feuermelder_schlafzimmer_voc
+    above: 660
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
+    trigger: numeric_state
+  conditions: []
+  actions:
+  - data:
+      title: ⚠️ Luftqualitätswarnung
+      message: 'VOC-Wert in {{ trigger.to_state.attributes.friendly_name | replace(''VOC'',
+        '''') }}  ist {{ trigger.to_state.state }} ppb. Lüften empfohlen!
+
+        '
+    action: notify.mobile_app_iphone_dom
+  mode: single
+- id: '2025010703'
+  alias: Proaktive Batteriewarnung bei 20%
+  description: Frühzeitige Warnung bei niedrigem Batteriestand
+  triggers:
+  - entity_id:
+    - sensor.wohnzimmer_gross_batterie
+    - sensor.wohnzimmer_klein_batterie
+    - sensor.arbeitszimmer_batterie
+    - sensor.schlafzimmer_batterie
+    - sensor.kuche_batterie
+    - sensor.badezimmer_batterie
+    - sensor.toilette_batterie
+    - sensor.eve_door_20ebn9901_batterie
+    - sensor.eve_door_20ebn9901_batterie_2
+    - sensor.eve_door_20ebn9901_batterie_3
+    - sensor.eve_door_20ebn9901_batterie_4
+    - sensor.eve_door_20ebn9901_batterie_5
+    - sensor.schlafzimmerfenster_batterie_6
+    - sensor.toilettenfenster_batterie_6
+    - sensor.feuermelder_arbeitszimmer_battery
+    - sensor.feuermelder_wohnzimmer_battery
+    - sensor.feuermelder_schlafzimmer_battery
+    below: 20
+    trigger: numeric_state
+  conditions: []
+  actions:
+  - data:
+      title: "\U0001F50B Batterie Warnung"
+      message: '{{ trigger.to_state.attributes.friendly_name }} hat nur noch  {{ trigger.to_state.state
+        }}% Batterie. Bald wechseln!
+
+        '
+    action: notify.mobile_app_iphone_dom
+  mode: single
+- id: '2025010704'
+  alias: Geschirrspüler Energieoptimierung
+  description: Benachrichtigung für optimale Solarstrom-Nutzung
+  trigger:
+  - platform: state
+    entity_id: sensor.geschirrspuler_betriebszustand
+    to: ready
+  condition:
+  - condition: numeric_state
+    entity_id: sensor.balkonkraftwerk_leistung
+    above: 400
+  - condition: time
+    after: '10:00:00'
+    before: '16:00:00'
+  action:
+  - service: notify.mobile_app_iphone_dom
+    data:
+      title: ☀️ Solarstrom verfügbar
+      message: 'Geschirrspüler ist bereit und Solarstrom ({{ states(''sensor.balkonkraftwerk_leistung'')
+        }}W)  verfügbar. Jetzt starten für optimale Energienutzung!
+
+        '
+  mode: single
+- id: '2025010706'
+  alias: Balkonkraftwerk Leistungsbenachrichtigung
+  description: Optimale Nutzung von hoher Solarleistung
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.balkonkraftwerk_leistung
+    above: 500
+  condition:
+  - condition: state
+    entity_id: switch.fritz_dect_200_19
+    state: 'off'
+  - condition: state
+    entity_id: switch.spulmaschine
+    state: 'off'
+  action:
+  - service: notify.mobile_app_iphone_dom
+    data:
+      title: ☀️ Hohe Solarleistung
+      message: 'Balkonkraftwerk produziert {{ states(''sensor.balkonkraftwerk_leistung'')
+        }}W.  Perfekt für Waschmaschine oder Geschirrspüler!
+
+        '
+  mode: single
+- id: '2025010707'
+  alias: Hoher Stromverbrauch Warnung
+  description: Warnung bei ungewöhnlich hohem Stromverbrauch
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.fritz_dect_200_19_leistung
+    above: 2000
+    for: 01:00:00
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_dom
+    data:
+      title: ⚡ Hoher Stromverbrauch
+      message: 'Waschmaschine verbraucht seit 1h über 2000W  ({{ states(''sensor.fritz_dect_200_19_leistung'')
+        }}W). Prüfen!
+
+        '
+  mode: single
+- id: '2025010708'
+  alias: Extreme Temperatur Warnung
+  description: Warnung bei extremen Außentemperaturen
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.balkonkraftwerk_temperatur
+    below: -10
+  - platform: numeric_state
+    entity_id: sensor.balkonkraftwerk_temperatur
+    above: 35
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_dom
+    data:
+      title: "\U0001F321️ Extreme Außentemperatur"
+      message: "Außentemperatur: {{ states('sensor.balkonkraftwerk_temperatur') }}°C.
+        \ {% if trigger.to_state.state | float < -10 %}\n  Frostschutz prüfen!\n{%
+        else %}\n  Hitzeschutz beachten!\n{% endif %}\n"
+  mode: single
+- id: '2025010710'
+  alias: Meater Zieltemperatur erreicht
+  description: Benachrichtigung wenn Fleisch fertig ist
+  trigger:
+  - platform: template
+    value_template: "{{ states('sensor.meater_6ec44639acc6107a146fc3bde767ded9aa5795ab7819a1035fa28247a77df05f_cook_peak_temp')
+      | float >= \n   states('sensor.meater_6ec44639acc6107a146fc3bde767ded9aa5795ab7819a1035fa28247a77df05f_cook_target_temp')
+      | float }}\n"
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_dom
+    data:
+      title: "\U0001F969 Fleisch ist fertig!"
+      message: 'Zieltemperatur erreicht: {{ states(''sensor.meater_6ec44639acc6107a146fc3bde767ded9aa5795ab7819a1035fa28247a77df05f_cook_peak_temp'')
+        }}°C
+
+        '
+  - service: notify.mobile_app_ipad_von_franklins
+    data:
+      title: "\U0001F969 Fleisch ist fertig!"
+      message: 'Zieltemperatur erreicht: {{ states(''sensor.meater_6ec44639acc6107a146fc3bde767ded9aa5795ab7819a1035fa28247a77df05f_cook_peak_temp'')
+        }}°C
+
+        '
+  mode: single
+- id: '2025010711'
+  alias: Nachtbeleuchtung bei Neumond
+  description: Sanfte Nachtbeleuchtung bei besonders dunklen Nächten
+  trigger:
+  - platform: sun
+    event: sunset
+  condition:
+  - condition: state
+    entity_id: sensor.moon_phase
+    state: new_moon
+  action:
+  - service: light.turn_on
+    target:
+      entity_id: light.schlafzimmerlampe
+    data:
+      brightness_pct: 10
+      color_temp: 500
+  - service: notify.mobile_app_iphone_dom
+    data:
+      title: "\U0001F319 Neumond Nachtlicht"
+      message: Nachtbeleuchtung aktiviert - heute ist Neumond
+  mode: single
+- id: '2025010712'
+  alias: NINA Warnung mit Aktionen
+  description: Erweiterte NINA Warnungen mit automatischen Aktionen
+  triggers:
+  - entity_id:
+    - binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_1
+    - binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_2
+    - binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_3
+    - binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_4
+    - binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_5
+    to: 'on'
+    trigger: state
+  conditions: []
+  actions:
+  - data:
+      title: "\U0001F6A8 NINA WARNUNG!"
+      message: '{{ state_attr(trigger.entity_id, ''headline'') }} Gesendet: {{ state_attr(trigger.entity_id,
+        ''sent'') }}
+
+        '
+    action: notify.mobile_app_iphone_dom
+  - data:
+      title: "\U0001F6A8 NINA WARNUNG!"
+      message: '{{ state_attr(trigger.entity_id, ''headline'') }} Gesendet: {{ state_attr(trigger.entity_id,
+        ''sent'') }}
+
+        '
+    action: notify.mobile_app_ipad_von_franklins
+  mode: single
+- id: '2025010713'
+  alias: Porsche Ladeerinnerung bei niedrigem Batteriestand
+  description: Erinnerung zum Laden des Porsche Taycan
+  triggers:
+  - entity_id:
+    - sensor.state_of_charge
+    below: 20
+    trigger: numeric_state
+  conditions:
+  - condition: state
+    state: Not Connected
+    entity_id: sensor.charging_status
+  actions:
+  - data:
+      title: "\U0001F3CE️ Porsche laden!"
+      message: 'Taycan Batterie nur noch {{ states(''sensor.porsche_taycan_battery_level'')
+        }}%.  Reichweite: {{ states(''sensor.porsche_taycan_range'') }}km. Laden empfohlen!
+
+        '
+    action: notify.mobile_app_iphone_dom
+  mode: single
+- id: '2025010715'
+  alias: Tägliche Smart Home Zusammenfassung
+  description: Täglicher Überblick über Smart Home Aktivitäten
+  trigger:
+  - platform: time
+    at: '22:00:00'
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_dom
+    data:
+      title: "\U0001F3E0 Tägliche Zusammenfassung"
+      message: "\U0001F3E0 Smart Home Tagesbericht:\n⚡ Stromverbrauch Waschmaschine:
+        {{ states('sensor.fritz_dect_200_19_energie') }}kWh\n\U0001F37D️ Spülmaschine:
+        {{ states('sensor.spulmaschine_energie') }}kWh\n\U0001F30A Wasserverbrauch:
+        {{ states('sensor.wasserverbrauch_heute') }}L\n\U0001F525 Gasverbrauch: {{
+        states('sensor.gasverbrauch_heute') }}m³\n\U0001F9FA Waschgänge: {{ states('counter.wasche_zyklen')
+        }}\n\U0001F32C️ CO2 Wohnzimmer: {{ states('sensor.0x000d6f0019c90004_co2')
+        }}ppm\n☀️ Balkonkraftwerk: {{ states('sensor.balkonkraftwerk_leistung') }}W
+        aktuell\n"
+  mode: single
