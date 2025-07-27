@@ -1,0 +1,5029 @@
+kiosk_mode:
+  hide_header: true
+views:
+  - title: Home
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: entity
+            entity: sensor.date
+            use_entity_picture: false
+          - type: entity
+            entity: sensor.time
+          - type: spacer
+          - type: menu
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+              animation: slideInDown 0.6s ease-out;
+            }
+            @keyframes slideInDown {
+              from { transform: translateY(-20px); opacity: 0; }
+              to { transform: translateY(0); opacity: 1; }
+            }
+      - type: custom:mushroom-template-card
+        primary: |-
+          {% set time = now().hour %}
+          {% if (time >= 18) %}
+            Guten Abend, {{user}}! 🌙
+          {% elif (time >= 12) %}
+            Einen schönen Nachmittag, {{user}}! ☀️
+          {% elif (time >= 5) %}
+            Guten Morgen, {{user}}! 🌅
+          {% else %}
+            Hallo, {{user}}! 🌃
+          {% endif %}
+        secondary: Willkommen in Ihrem Smart Home
+        icon: ''
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+              color: white;
+              text-align: center;
+              animation: fadeInUp 0.8s ease-out;
+              box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+            }
+            @keyframes fadeInUp {
+              from { transform: translateY(20px); opacity: 0; }
+              to { transform: translateY(0); opacity: 1; }
+            }
+      - show_current: true
+        show_forecast: true
+        type: weather-forecast
+        entity: weather.forecast_home
+        forecast_type: daily
+        secondary_info_attribute: humidity
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(3, 169, 244, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(33, 150, 243, 0.2);
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 12px 40px rgba(33, 150, 243, 0.2);
+            }
+      - event_grouping: true
+        drop_todayevents_from: '10:00:00'
+        next_days: 25
+        pattern:
+          - icon: mdi:flower
+            color: lime
+            type: organic
+            label: Biomüll
+            pattern: Biomüll
+          - icon: mdi:newspaper
+            color: blue
+            type: paper
+            label: Papier
+            pattern: Papier 120l/240l
+          - icon: mdi:recycle-variant
+            color: amber
+            type: recycle
+          - icon: mdi:trash-can-outline
+            color: grey
+            type: waste
+            label: Restmüll
+            pattern: Restmüll 120l/240l
+          - icon: mdi:dump-truck
+            color: purple
+            type: others
+        day_style: counter
+        card_style: chip
+        alignment_style: center
+        items_per_row: 3
+        refresh_rate: 60
+        with_label: true
+        type: custom:trash-card
+        entities:
+          - calendar.ics
+        filter_events: true
+        hide_time_range: true
+        full_size: false
+        use_summary: false
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(76, 175, 80, 0.2);
+            }
+      - type: custom:mushroom-title-card
+        title: 🏠 Smart Home Steuerung
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 24px;
+              --title-font-weight: bold;
+              text-align: center;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Fenster
+            secondary: ''
+            icon: mdi:window-closed-variant
+            icon_color: blue
+            layout: vertical
+            tap_action:
+              action: navigate
+              navigation_path: Fenster
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(33, 150, 243, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-5px) scale(1.02);
+                  box-shadow: 0 15px 35px rgba(33, 150, 243, 0.3);
+                }
+                mushroom-shape-icon {
+                  animation: bounce 2s infinite;
+                }
+                @keyframes bounce {
+                  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+                  40% { transform: translateY(-10px); }
+                  60% { transform: translateY(-5px); }
+                }
+          - type: custom:mushroom-template-card
+            primary: Lichter
+            secondary: ''
+            icon: mdi:lightbulb
+            layout: vertical
+            tap_action:
+              action: navigate
+              navigation_path: Lichter
+            icon_color: yellow
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(255, 193, 7, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-5px) scale(1.02);
+                  box-shadow: 0 15px 35px rgba(255, 193, 7, 0.3);
+                }
+                mushroom-shape-icon {
+                  animation: pulse 2s ease-in-out infinite;
+                }
+                @keyframes pulse {
+                  0%, 100% { opacity: 1; }
+                  50% { opacity: 0.7; }
+                }
+          - type: custom:mushroom-template-card
+            primary: Steckdosen
+            secondary: ''
+            icon: mdi:power-socket-de
+            layout: vertical
+            tap_action:
+              action: navigate
+              navigation_path: Steckdosen
+            icon_color: green
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(76, 175, 80, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-5px) scale(1.02);
+                  box-shadow: 0 15px 35px rgba(76, 175, 80, 0.3);
+                }
+          - type: custom:mushroom-template-card
+            primary: Heizung
+            secondary: ''
+            icon: mdi:heating-coil
+            layout: vertical
+            tap_action:
+              action: navigate
+              navigation_path: Heizung
+            icon_color: red
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(244, 67, 54, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-5px) scale(1.02);
+                  box-shadow: 0 15px 35px rgba(244, 67, 54, 0.3);
+                }
+                mushroom-shape-icon {
+                  animation: glow 2s ease-in-out infinite alternate;
+                }
+                @keyframes glow {
+                  from { filter: brightness(1); }
+                  to { filter: brightness(1.3); }
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Porsche
+            secondary: ''
+            icon: mdi:car-electric
+            layout: vertical
+            tap_action:
+              action: navigate
+              navigation_path: Porsche
+            icon_color: amber
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(212, 175, 55, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-5px) scale(1.02);
+                  box-shadow: 0 15px 35px rgba(212, 175, 55, 0.3);
+                }
+                mushroom-shape-icon {
+                  animation: carShine 3s ease-in-out infinite;
+                }
+                @keyframes carShine {
+                  0%, 100% { 
+                    filter: brightness(1);
+                    transform: scale(1);
+                  }
+                  50% { 
+                    filter: brightness(1.4) drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
+                    transform: scale(1.05);
+                  }
+                }
+          - type: custom:mushroom-template-card
+            primary: Batterie
+            secondary: ''
+            icon: mdi:battery-heart-variant
+            layout: vertical
+            tap_action:
+              action: navigate
+              navigation_path: Batteriestatus
+            icon_color: purple
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(156, 39, 176, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-5px) scale(1.02);
+                  box-shadow: 0 15px 35px rgba(156, 39, 176, 0.3);
+                }
+                mushroom-shape-icon {
+                  animation: batteryPulse 2s ease-in-out infinite;
+                }
+                @keyframes batteryPulse {
+                  0%, 100% { opacity: 1; }
+                  50% { opacity: 0.7; }
+                }
+          - type: custom:mushroom-template-card
+            primary: Energie
+            secondary: ''
+            icon: mdi:lightning-bolt
+            layout: vertical
+            tap_action:
+              action: navigate
+              navigation_path: /energy
+            icon_color: yellow
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(255, 193, 7, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-5px) scale(1.02);
+                  box-shadow: 0 15px 35px rgba(255, 193, 7, 0.3);
+                }
+                mushroom-shape-icon {
+                  animation: energyPulse 2s ease-in-out infinite;
+                }
+                @keyframes energyPulse {
+                  0%, 100% { 
+                    filter: brightness(1);
+                    transform: scale(1);
+                  }
+                  50% { 
+                    filter: brightness(1.3) drop-shadow(0 0 8px rgba(255, 193, 7, 0.6));
+                    transform: scale(1.05);
+                  }
+                }
+      - type: conditional
+        conditions:
+          - entity: binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_1
+            state: 'on'
+        card:
+          type: entities
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(244, 67, 54, 0.2) 0%, rgba(244, 67, 54, 0.1) 100%);
+              backdrop-filter: blur(10px);
+              border: 2px solid rgba(244, 67, 54, 0.5);
+              animation: warningPulse 2s ease-in-out infinite;
+              box-shadow: 0 8px 32px rgba(244, 67, 54, 0.3);
+            }
+            @keyframes warningPulse {
+              0%, 100% { 
+                border-color: rgba(244, 67, 54, 0.5);
+                box-shadow: 0 8px 32px rgba(244, 67, 54, 0.3);
+              }
+              50% { 
+                border-color: rgba(244, 67, 54, 0.8);
+                box-shadow: 0 12px 40px rgba(244, 67, 54, 0.5);
+              }
+            }
+          entities:
+            - type: attribute
+              entity: >-
+                binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_1
+              attribute: headline
+              name: ⚠️ Leonberg Warnung
+              image: /local/nina.jpeg
+            - type: attribute
+              entity: >-
+                binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_1
+              attribute: sent
+              name: 📅 Gesendet
+      - type: conditional
+        conditions:
+          - entity: binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_2
+            state: 'on'
+        card:
+          type: entities
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(244, 67, 54, 0.2) 0%, rgba(244, 67, 54, 0.1) 100%);
+              backdrop-filter: blur(10px);
+              border: 2px solid rgba(244, 67, 54, 0.5);
+              animation: warningPulse 2s ease-in-out infinite;
+              box-shadow: 0 8px 32px rgba(244, 67, 54, 0.3);
+            }
+            @keyframes warningPulse {
+              0%, 100% { 
+                border-color: rgba(244, 67, 54, 0.5);
+                box-shadow: 0 8px 32px rgba(244, 67, 54, 0.3);
+              }
+              50% { 
+                border-color: rgba(244, 67, 54, 0.8);
+                box-shadow: 0 12px 40px rgba(244, 67, 54, 0.5);
+              }
+            }
+          entities:
+            - type: attribute
+              entity: >-
+                binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_2
+              attribute: headline
+              name: ⚠️ Leonberg Warnung
+              image: /local/nina.jpeg
+            - type: attribute
+              entity: >-
+                binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_2
+              attribute: sent
+              name: 📅 Gesendet
+      - type: conditional
+        conditions:
+          - entity: binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_3
+            state: 'on'
+        card:
+          type: entities
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(244, 67, 54, 0.2) 0%, rgba(244, 67, 54, 0.1) 100%);
+              backdrop-filter: blur(10px);
+              border: 2px solid rgba(244, 67, 54, 0.5);
+              animation: warningPulse 2s ease-in-out infinite;
+              box-shadow: 0 8px 32px rgba(244, 67, 54, 0.3);
+            }
+            @keyframes warningPulse {
+              0%, 100% { 
+                border-color: rgba(244, 67, 54, 0.5);
+                box-shadow: 0 8px 32px rgba(244, 67, 54, 0.3);
+              }
+              50% { 
+                border-color: rgba(244, 67, 54, 0.8);
+                box-shadow: 0 12px 40px rgba(244, 67, 54, 0.5);
+              }
+            }
+          entities:
+            - type: attribute
+              entity: >-
+                binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_3
+              attribute: headline
+              name: ⚠️ Leonberg Warnung
+              image: /local/nina.jpeg
+            - type: attribute
+              entity: >-
+                binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_3
+              attribute: sent
+              name: 📅 Gesendet
+      - type: conditional
+        conditions:
+          - entity: binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_4
+            state: 'on'
+        card:
+          type: entities
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(244, 67, 54, 0.2) 0%, rgba(244, 67, 54, 0.1) 100%);
+              backdrop-filter: blur(10px);
+              border: 2px solid rgba(244, 67, 54, 0.5);
+              animation: warningPulse 2s ease-in-out infinite;
+              box-shadow: 0 8px 32px rgba(244, 67, 54, 0.3);
+            }
+            @keyframes warningPulse {
+              0%, 100% { 
+                border-color: rgba(244, 67, 54, 0.5);
+                box-shadow: 0 8px 32px rgba(244, 67, 54, 0.3);
+              }
+              50% { 
+                border-color: rgba(244, 67, 54, 0.8);
+                box-shadow: 0 12px 40px rgba(244, 67, 54, 0.5);
+              }
+            }
+          entities:
+            - type: attribute
+              entity: >-
+                binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_4
+              attribute: headline
+              name: ⚠️ Leonberg Warnung
+              image: /local/nina.jpeg
+            - type: attribute
+              entity: >-
+                binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_4
+              attribute: sent
+              name: 📅 Gesendet
+      - type: conditional
+        conditions:
+          - entity: binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_5
+            state: 'on'
+        card:
+          type: entities
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(244, 67, 54, 0.2) 0%, rgba(244, 67, 54, 0.1) 100%);
+              backdrop-filter: blur(10px);
+              border: 2px solid rgba(244, 67, 54, 0.5);
+              animation: warningPulse 2s ease-in-out infinite;
+              box-shadow: 0 8px 32px rgba(244, 67, 54, 0.3);
+            }
+            @keyframes warningPulse {
+              0%, 100% { 
+                border-color: rgba(244, 67, 54, 0.5);
+                box-shadow: 0 8px 32px rgba(244, 67, 54, 0.3);
+              }
+              50% { 
+                border-color: rgba(244, 67, 54, 0.8);
+                box-shadow: 0 12px 40px rgba(244, 67, 54, 0.5);
+              }
+            }
+          entities:
+            - type: attribute
+              entity: >-
+                binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_5
+              attribute: headline
+              name: ⚠️ Leonberg Warnung
+              image: /local/nina.jpeg
+            - type: attribute
+              entity: >-
+                binary_sensor.warning_leonberg_stadt_boblingen_baden_wurttemberg_5
+              attribute: sent
+              name: 📅 Gesendet
+      - type: media-control
+        entity: media_player.appletv
+        visibility:
+          - condition: state
+            entity: media_player.dominik_s_samsung_soundbar_q990c_3
+            state: playing
+      - type: custom:mushroom-title-card
+        title: 🏠 Räume
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 20px;
+              --title-font-weight: bold;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Wohnzimmer
+            secondary: >-
+              🌡️ {{ states('sensor.feuermelder_wohnzimmer_temperature') }}°C 💧
+              {{ states('sensor.feuermelder_wohnzimmer_humidity') }}%
+            icon: mdi:sofa
+            entity: switch.entertainment_system
+            tap_action:
+              action: navigate
+              navigation_path: Wohnzimmer
+            hold_action:
+              action: toggle
+            icon_color: |-
+              {% if is_state('switch.entertainment_system', 'on') %}
+                orange
+              {% else %}
+                grey
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.entertainment_system', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.entertainment_system', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-3px);
+                  box-shadow: 0 12px 30px 
+                    {% if is_state('switch.entertainment_system', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-template-card
+            primary: Arbeitszimmer
+            secondary: >-
+              🌡️ {{ states('sensor.feuermelder_arbeitszimmer_temperature') }}°C
+              💧 {{ states('sensor.feuermelder_arbeitszimmer_humidity') }}%
+            icon: mdi:desk
+            tap_action:
+              action: navigate
+              navigation_path: Arbeitszimmer
+            hold_action:
+              action: toggle
+            entity: switch.homeoffice
+            icon_color: |-
+              {% if is_state('switch.homeoffice', 'on') %}
+                orange
+              {% else %}
+                grey
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.homeoffice', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.homeoffice', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-3px);
+                  box-shadow: 0 12px 30px 
+                    {% if is_state('switch.homeoffice', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Schlafzimmer
+            secondary: >-
+              🌡️ {{ states('sensor.feuermelder_schlafzimmer_temperature') }}°C
+              💧 {{ states('sensor.feuermelder_schlafzimmer_humidity') }}%
+            icon: mdi:bed
+            entity: binary_sensor.schlafzimmerfenster_tur_6
+            tap_action:
+              action: navigate
+              navigation_path: Schlafzimmer
+            hold_action:
+              action: none
+            icon_color: |-
+              {% if is_state('binary_sensor.schlafzimmerfenster_tur_6', 'on') %}
+                orange
+              {% else %}
+                grey
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('binary_sensor.schlafzimmerfenster_tur_6', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('binary_sensor.schlafzimmerfenster_tur_6', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-3px);
+                  box-shadow: 0 12px 30px 
+                    {% if is_state('binary_sensor.schlafzimmerfenster_tur_6', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-template-card
+            primary: Küche
+            secondary: >-
+              🌡️ {{ states('sensor.temperatursensor_kuche_temperature') }}°C 💧
+              {{ states('sensor.temperatursensor_kuche_humidity') }}%
+            icon: mdi:chef-hat
+            tap_action:
+              action: navigate
+              navigation_path: Küche
+            hold_action:
+              action: none
+            entity: binary_sensor.eve_door_20ebn9901_tur_4
+            icon_color: |-
+              {% if is_state('binary_sensor.eve_door_20ebn9901_tur_4', 'on') %}
+                orange
+              {% else %}
+                grey
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_4', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_4', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-3px);
+                  box-shadow: 0 12px 30px 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_4', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Badezimmer
+            secondary: >-
+              🌡️ {{ states('sensor.temperatursensor_badezimmer_temperature')
+              }}°C 💧 {{ states('sensor.temperatursensor_badezimmer_humidity')
+              }}%
+            icon: mdi:shower
+            tap_action:
+              action: navigate
+              navigation_path: Badezimmer
+            hold_action:
+              action: none
+            entity: binary_sensor.eve_door_20ebn9901_tur_5
+            icon_color: |-
+              {% if is_state('binary_sensor.eve_door_20ebn9901_tur_5', 'on') %}
+                orange
+              {% else %}
+                grey
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_5', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_5', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-3px);
+                  box-shadow: 0 12px 30px 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_5', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-template-card
+            primary: Toilette
+            secondary: >-
+              🌡️ {{ states('sensor.temperatursensor_toilette_temperature') }}°C
+              💧 {{ states('sensor.temperatursensor_toilette_humidity') }}%
+            icon: mdi:toilet
+            tap_action:
+              action: navigate
+              navigation_path: Toilette
+            hold_action:
+              action: none
+            entity: binary_sensor.toilettenfenster_tur_6
+            icon_color: |-
+              {% if is_state('binary_sensor.toilettenfenster_tur_6', 'on') %}
+                orange
+              {% else %}
+                grey
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('binary_sensor.toilettenfenster_tur_6', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('binary_sensor.toilettenfenster_tur_6', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-3px);
+                  box-shadow: 0 12px 30px 
+                    {% if is_state('binary_sensor.toilettenfenster_tur_6', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Keller
+            secondary: '{{ states(''sensor.gefrierschrank_e_bike_temperatur'') }}°C'
+            icon: mdi:washing-machine
+            tap_action:
+              action: navigate
+              navigation_path: Keller
+            hold_action:
+              action: none
+            entity: switch.fritz_dect_200_19
+            icon_color: |-
+              {% if is_state('switch.fritz_dect_200_19', 'on') %}
+                orange
+              {% else %}
+                grey
+              {% endif %}
+            multiline_secondary: false
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.fritz_dect_200_19', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.fritz_dect_200_19', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-3px);
+                  box-shadow: 0 12px 30px 
+                    {% if is_state('switch.fritz_dect_200_19', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-template-card
+            primary: Balkon
+            secondary: '{{ states(''sensor.balkonkraftwerk_temperatur'') }}°C'
+            icon: mdi:solar-power-variant
+            tap_action:
+              action: navigate
+              navigation_path: Balkon
+            hold_action:
+              action: none
+            entity: sensor.balkonkraftwerk_leistung
+            icon_color: |-
+              {% if is_state('switch.balkonkraftwerk', 'on') %}
+                orange
+              {% else %}
+                grey
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.balkonkraftwerk', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.balkonkraftwerk', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-3px);
+                  box-shadow: 0 12px 30px 
+                    {% if is_state('switch.balkonkraftwerk', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: custom:mushroom-title-card
+        title: 🤖 Harald - Staubsauger
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 20px;
+              --title-font-weight: bold;
+              margin-top: 16px;
+            }
+      - type: custom:xiaomi-vacuum-map-card
+        map_source:
+          camera: camera.harald_map
+        calibration_source:
+          camera: true
+        entity: vacuum.harald
+        vacuum_platform: default
+        map_locked: true
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(103, 58, 183, 0.1) 0%, rgba(103, 58, 183, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(103, 58, 183, 0.2);
+              border-radius: 12px;
+              transition: all 0.3s ease;
+              animation: mapGlow 4s ease-in-out infinite;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 12px 40px rgba(103, 58, 183, 0.3);
+            }
+            @keyframes mapGlow {
+              0%, 100% { 
+                border-color: rgba(103, 58, 183, 0.2);
+                box-shadow: 0 0 15px rgba(103, 58, 183, 0.1);
+              }
+              50% { 
+                border-color: rgba(103, 58, 183, 0.4);
+                box-shadow: 0 0 25px rgba(103, 58, 183, 0.2);
+              }
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: vacuum.harald
+            name: 🤖 Harald Status
+            icon: mdi:robot-vacuum
+            icon_color: |
+              {% if is_state('vacuum.harald', 'cleaning') %}
+                green
+              {% elif is_state('vacuum.harald', 'returning') %}
+                orange
+              {% elif is_state('vacuum.harald', 'docked') %}
+                blue
+              {% else %}
+                grey
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('vacuum.harald', 'cleaning') %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% elif is_state('vacuum.harald', 'returning') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% elif is_state('vacuum.harald', 'docked') %}
+                      rgba(33, 150, 243, 0.15) 0%, rgba(3, 169, 244, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('vacuum.harald', 'cleaning') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif is_state('vacuum.harald', 'returning') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% elif is_state('vacuum.harald', 'docked') %}
+                      rgba(33, 150, 243, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                  {% if is_state('vacuum.harald', 'cleaning') %}
+                    animation: cleaningPulse 2s ease-in-out infinite;
+                  {% endif %}
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('vacuum.harald', 'cleaning') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif is_state('vacuum.harald', 'returning') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% elif is_state('vacuum.harald', 'docked') %}
+                      rgba(33, 150, 243, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+                @keyframes cleaningPulse {
+                  0%, 100% { 
+                    border-color: rgba(76, 175, 80, 0.3);
+                    transform: scale(1);
+                  }
+                  50% { 
+                    border-color: rgba(76, 175, 80, 0.8);
+                    transform: scale(1.02);
+                  }
+                }
+          - type: custom:mushroom-entity-card
+            entity: sensor.harald_battery_level
+            name: 🔋 Batterie
+            icon: mdi:battery
+            icon_color: |
+              {% set level = states('sensor.harald_battery_level') | int(0) %}
+              {% if level >= 80 %}
+                green
+              {% elif level >= 50 %}
+                orange
+              {% elif level >= 20 %}
+                yellow
+              {% else %}
+                red
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  {% set level = states('sensor.harald_battery_level') | int(0) %}
+                  background: linear-gradient(135deg, 
+                    {% if level >= 80 %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% elif level >= 50 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% elif level >= 20 %}
+                      rgba(255, 193, 7, 0.15) 0%, rgba(255, 235, 59, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if level >= 80 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif level >= 50 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 193, 7, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if level >= 80 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif level >= 50 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 193, 7, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                }
+  - title: Wohnzimmer
+    path: Wohnzimmer
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: 🛋️ Wohnzimmer Dashboard
+        subtitle: Klima, Beleuchtung & Entertainment
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 💧 Luftfeuchtigkeit
+              show_states: true
+            series:
+              - entity: sensor.feuermelder_wohnzimmer_humidity
+                name: Luftfeuchtigkeit
+                color: '#2196F3'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+              yaxis:
+                min: 30
+                max: 70
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(33, 150, 243, 0.2);
+                }
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 🌡️ Temperatur
+              show_states: true
+            series:
+              - entity: sensor.feuermelder_arbeitszimmer_temperature
+                name: Temperatur
+                color: '#FF6B6B'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+              yaxis:
+                min: 15
+                max: 30
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(255, 107, 107, 0.2);
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: switch.entertainment_system
+            name: 📺 Entertainment System
+            icon: mdi:television
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.entertainment_system', 'on') %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.entertainment_system', 'on') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.entertainment_system', 'on') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: switch.lautsprecher
+            name: 🔊 Lautsprecher
+            icon: mdi:speaker
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.lautsprecher', 'on') %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.lautsprecher', 'on') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.lautsprecher', 'on') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: custom:stack-in-card
+        cards:
+          - type: custom:mushroom-template-card
+            primary: 'Luftqualität: {{ states("sensor.feuermelder_wohnzimmer_aqi") }}'
+            secondary: >
+              {% if states("sensor.feuermelder_wohnzimmer_aqi") | int(0) <= 50
+              %}
+                Sehr gut 😊 - Perfekte Luftqualität
+              {% elif states("sensor.feuermelder_wohnzimmer_aqi") | int(0) <=
+              100 %}
+                Mittel 😐 - Akzeptable Luftqualität
+              {% else %}
+                Schlecht 😷 - Lüften empfohlen!
+              {% endif %}
+            icon: mdi:air-filter
+            entity: sensor.feuermelder_wohnzimmer_aqi
+            icon_color: >
+              {% if states("sensor.feuermelder_wohnzimmer_aqi") | int(0) <= 50
+              %}
+                green
+              {% elif states("sensor.feuermelder_wohnzimmer_aqi") | int(0) <=
+              100 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            badge_icon: none
+            layout: horizontal
+            tap_action:
+              action: more-info
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if states('sensor.feuermelder_wohnzimmer_aqi') | int(0) <= 50 %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%
+                    {% elif states('sensor.feuermelder_wohnzimmer_aqi') | int(0) <= 100 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if states('sensor.feuermelder_wohnzimmer_aqi') | int(0) <= 50 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif states('sensor.feuermelder_wohnzimmer_aqi') | int(0) <= 100 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  animation: breathe 3s ease-in-out infinite;
+                }
+                @keyframes breathe {
+                  0%, 100% { transform: scale(1); }
+                  50% { transform: scale(1.02); }
+                }
+        card_mod:
+          style: |
+            ha-card {
+              margin: 8px 0;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: 'CO₂: {{ states("sensor.feuermelder_wohnzimmer_co2") }} ppm'
+            secondary: >
+              {% set co2 = states('sensor.feuermelder_wohnzimmer_co2') | int(0)
+              %}
+
+              {% if co2 <= 400 %}
+                Ausgezeichnet 🌟 - Frische Außenluft
+              {% elif co2 <= 1000 %}
+                Gut 😊 - Normale Raumluft
+              {% elif co2 <= 1500 %}
+                Mäßig 😐 - Lüften empfohlen
+              {% elif co2 <= 2000 %}
+                Schlecht 😷 - Dringend lüften!
+              {% else %}
+                Kritisch ⚠️ - Sofort lüften!
+              {% endif %}
+            icon: mdi:molecule-co2
+            entity: sensor.feuermelder_wohnzimmer_co2
+            icon_color: >
+              {% set co2 = states('sensor.feuermelder_wohnzimmer_co2') | int(0)
+              %}
+
+              {% if co2 <= 400 %}
+                blue
+              {% elif co2 <= 1000 %}
+                green
+              {% elif co2 <= 1500 %}
+                orange
+              {% elif co2 <= 2000 %}
+                red
+              {% else %}
+                purple
+              {% endif %}
+            layout: vertical
+            fill_container: false
+            multiline_secondary: false
+            tap_action:
+              action: more-info
+          - type: custom:mushroom-template-card
+            primary: 'VOC: {{ states("sensor.feuermelder_wohnzimmer_voc") }} ppb'
+            secondary: >
+              {% set voc = states('sensor.feuermelder_wohnzimmer_voc') | int(0)
+              %}
+
+              {% if voc <= 65 %}
+                Ausgezeichnet 🌟 - Sehr saubere Luft
+              {% elif voc <= 220 %}
+                Gut 😊 - Normale Luftqualität
+              {% elif voc <= 660 %}
+                Mäßig 😐 - Leichte Belastung
+              {% elif voc <= 2200 %}
+                Schlecht 😷 - Hohe Belastung
+              {% else %}
+                Kritisch ⚠️ - Sehr hohe Belastung
+              {% endif %}
+            icon: mdi:air-filter
+            entity: sensor.feuermelder_wohnzimmer_voc
+            icon_color: >
+              {% set voc = states('sensor.feuermelder_wohnzimmer_voc') | int(0)
+              %}
+
+              {% if voc <= 65 %}
+                blue
+              {% elif voc <= 220 %}
+                green
+              {% elif voc <= 660 %}
+                orange
+              {% elif voc <= 2200 %}
+                red
+              {% else %}
+                purple
+              {% endif %}
+            layout: vertical
+            tap_action:
+              action: more-info
+      - type: horizontal-stack
+        cards:
+          - type: custom:better-thermostat-ui-card
+            entity: climate.wohnzimmer_gross
+            disable_buttons: true
+            name: Heizung Groß
+            disable_window: true
+            disable_summer: false
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(244, 67, 54, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(244, 67, 54, 0.2);
+                }
+          - type: custom:better-thermostat-ui-card
+            entity: climate.wohnzimmer_klein
+            name: Heizung Klein
+            disable_buttons: true
+            disable_window: true
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(244, 67, 54, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(244, 67, 54, 0.2);
+                }
+      - type: custom:mushroom-title-card
+        title: 💡 Beleuchtung
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 18px;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-light-card
+            entity: light.wohnzimmer_deckenlampe
+            name: Hauptlicht
+            use_light_color: true
+            show_brightness_control: true
+            show_color_temp_control: false
+            show_color_control: false
+            tap_action:
+              action: toggle
+            collapsible_controls: true
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('light.0x001788010b4921f9', 'on') %}
+                      rgba(255, 193, 7, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('light.0x001788010b4921f9', 'on') %}
+                      rgba(255, 193, 7, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('light.0x001788010b4921f9', 'on') %}
+                      rgba(255, 193, 7, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-light-card
+            entity: light.lichtschlauch_tv_area
+            name: Akzentlicht
+            use_light_color: true
+            show_brightness_control: true
+            collapsible_controls: true
+            show_color_control: true
+            show_color_temp_control: false
+            tap_action:
+              action: toggle
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('light.0x0017880109bf725d', 'on') %}
+                      rgba(255, 193, 7, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('light.0x0017880109bf725d', 'on') %}
+                      rgba(255, 193, 7, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('light.0x0017880109bf725d', 'on') %}
+                      rgba(255, 193, 7, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+  - title: Arbeitszimmer
+    path: Arbeitszimmer
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: 🖥️ Arbeitszimmer Dashboard
+        subtitle: Produktivität & Komfort
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 💧 Luftfeuchtigkeit
+              show_states: true
+            series:
+              - entity: sensor.feuermelder_arbeitszimmer_humidity
+                name: Luftfeuchtigkeit
+                color: '#2196F3'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+              yaxis:
+                min: 30
+                max: 70
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(33, 150, 243, 0.2);
+                }
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 🌡️ Temperatur
+              show_states: true
+            series:
+              - entity: sensor.feuermelder_arbeitszimmer_temperature
+                name: Temperatur
+                color: '#FF6B6B'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+              yaxis:
+                min: 15
+                max: 30
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(255, 107, 107, 0.2);
+                }
+      - type: custom:better-thermostat-ui-card
+        entity: climate.arbeitszimmer
+        disable_buttons: true
+        disable_window: true
+        name: 🔥 Heizung
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(244, 67, 54, 0.2);
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px rgba(244, 67, 54, 0.2);
+            }
+      - type: custom:stack-in-card
+        cards:
+          - type: custom:mushroom-template-card
+            primary: 'Luftqualität: {{ states("sensor.feuermelder_arbeitszimmer_aqi") }}'
+            secondary: >
+              {% if states("sensor.feuermelder_arbeitszimmer_aqi") | int(0) <=
+              50 %}
+                Sehr gut 😊 - Perfekte Arbeitsatmosphäre
+              {% elif states("sensor.feuermelder_arbeitszimmer_aqi") | int(0) <=
+              100 %}
+                Mittel 😐 - Akzeptable Luftqualität
+              {% else %}
+                Schlecht 😷 - Lüften empfohlen!
+              {% endif %}
+            icon: mdi:air-filter
+            entity: sensor.feuermelder_arbeitszimmer_aqi
+            icon_color: >
+              {% if states("sensor.feuermelder_arbeitszimmer_aqi") | int(0) <=
+              50 %}
+                green
+              {% elif states("sensor.feuermelder_arbeitszimmer_aqi") | int(0) <=
+              100 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            badge_icon: none
+            layout: horizontal
+            tap_action:
+              action: more-info
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if states('sensor.feuermelder_arbeitszimmer_aqi') | int(0) <= 50 %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%
+                    {% elif states('sensor.feuermelder_arbeitszimmer_aqi') | int(0) <= 100 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if states('sensor.feuermelder_arbeitszimmer_aqi') | int(0) <= 50 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif states('sensor.feuermelder_arbeitszimmer_aqi') | int(0) <= 100 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  animation: breathe 3s ease-in-out infinite;
+                }
+                @keyframes breathe {
+                  0%, 100% { transform: scale(1); }
+                  50% { transform: scale(1.02); }
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: 'CO₂: {{ states("sensor.feuermelder_arbeitszimmer_co2") }} ppm'
+            secondary: >
+              {% set co2 = states('sensor.feuermelder_arbeitszimmer_co2') |
+              int(0) %}
+
+              {% if co2 <= 400 %}
+                Ausgezeichnet 🌟 - Frische Außenluft
+              {% elif co2 <= 1000 %}
+                Gut 😊 - Normale Raumluft
+              {% elif co2 <= 1500 %}
+                Mäßig 😐 - Lüften empfohlen
+              {% elif co2 <= 2000 %}
+                Schlecht 😷 - Dringend lüften!
+              {% else %}
+                Kritisch ⚠️ - Sofort lüften!
+              {% endif %}
+            icon: mdi:molecule-co2
+            entity: sensor.feuermelder_arbeitszimmer_co2
+            icon_color: >
+              {% set co2 = states('sensor.feuermelder_arbeitszimmer_co2') |
+              int(0) %}
+
+              {% if co2 <= 400 %}
+                blue
+              {% elif co2 <= 1000 %}
+                green
+              {% elif co2 <= 1500 %}
+                orange
+              {% elif co2 <= 2000 %}
+                red
+              {% else %}
+                purple
+              {% endif %}
+            layout: vertical
+            tap_action:
+              action: more-info
+          - type: custom:mushroom-template-card
+            primary: 'VOC: {{ states("sensor.feuermelder_arbeitszimmer_voc") }} ppb'
+            secondary: >
+              {% set voc = states('sensor.feuermelder_arbeitszimmer_voc') |
+              int(0) %}
+
+              {% if voc <= 65 %}
+                Ausgezeichnet 🌟 - Sehr saubere Luft
+              {% elif voc <= 220 %}
+                Gut 😊 - Normale Luftqualität
+              {% elif voc <= 660 %}
+                Mäßig 😐 - Leichte Belastung
+              {% elif voc <= 2200 %}
+                Schlecht 😷 - Hohe Belastung
+              {% else %}
+                Kritisch ⚠️ - Sehr hohe Belastung
+              {% endif %}
+            icon: mdi:air-filter
+            entity: sensor.feuermelder_arbeitszimmer_voc
+            icon_color: >
+              {% set voc = states('sensor.feuermelder_arbeitszimmer_voc') |
+              int(0) %}
+
+              {% if voc <= 65 %}
+                blue
+              {% elif voc <= 220 %}
+                green
+              {% elif voc <= 660 %}
+                orange
+              {% elif voc <= 2200 %}
+                red
+              {% else %}
+                purple
+              {% endif %}
+            layout: vertical
+            tap_action:
+              action: more-info
+      - type: custom:mushroom-entity-card
+        entity: binary_sensor.eve_door_20ebn9901_tur_2
+        name: 🚪 Balkontür
+        icon: mdi:door
+      - type: custom:mushroom-title-card
+        title: 🔌 Arbeitsplatz
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 18px;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: switch.homeoffice
+            name: 💻 Home Office
+            tap_action:
+              action: more-info
+            hold_action:
+              action: toggle
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.homeoffice', 'on') %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.homeoffice', 'on') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.homeoffice', 'on') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: switch.drucker
+            name: 🖨️ Drucker
+            tap_action:
+              action: more-info
+            hold_action:
+              action: toggle
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.drucker', 'on') %}
+                      rgba(33, 150, 243, 0.15) 0%, rgba(3, 169, 244, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.drucker', 'on') %}
+                      rgba(33, 150, 243, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.drucker', 'on') %}
+                      rgba(33, 150, 243, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: custom:mushroom-title-card
+        title: 🏃‍♂️ Fitness Tracking
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 18px;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.dominik_on_peloton_duration
+            name: ⏱️ Trainingszeit
+            icon: mdi:clock-outline
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(156, 39, 176, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(156, 39, 176, 0.2);
+                }
+          - type: custom:mushroom-entity-card
+            entity: sensor.dominik_on_peloton_total_calories
+            name: 🔥 Kalorien
+            icon: mdi:fire
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(255, 87, 34, 0.1) 0%, rgba(255, 87, 34, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(255, 87, 34, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(255, 87, 34, 0.2);
+                }
+  - title: Küche
+    path: Küche
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: 🍳 Küchen Dashboard
+        subtitle: Kochen, Klima & Geräte
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #FF6B6B 0%, #FF8E53 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 💧 Luftfeuchtigkeit
+              show_states: true
+            series:
+              - entity: sensor.temperatursensor_kuche_humidity
+                name: Luftfeuchtigkeit
+                color: '#2196F3'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+              yaxis:
+                min: 30
+                max: 70
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(33, 150, 243, 0.2);
+                }
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 🌡️ Temperatur
+              show_states: true
+            series:
+              - entity: sensor.temperatursensor_kuche_temperature
+                name: Temperatur
+                color: '#FF6B6B'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+              yaxis:
+                min: 15
+                max: 30
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(255, 107, 107, 0.2);
+                }
+      - type: custom:better-thermostat-ui-card
+        entity: climate.kuche
+        disable_buttons: true
+        disable_window: true
+        name: 🔥 Heizung
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(244, 67, 54, 0.2);
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px rgba(244, 67, 54, 0.2);
+            }
+      - type: custom:mushroom-entity-card
+        entity: binary_sensor.eve_door_20ebn9901_tur_4
+        name: 🪟 Küchenfenster
+        icon: mdi:window-closed-variant
+        icon_color: |
+          {% if is_state('binary_sensor.eve_door_20ebn9901_tur_4', 'on') %}
+            orange
+          {% else %}
+            grey
+          {% endif %}
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, 
+                {% if is_state('binary_sensor.eve_door_20ebn9901_tur_4', 'on') %}
+                  rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                {% else %}
+                  rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%
+                {% endif %});
+              backdrop-filter: blur(10px);
+              border: 1px solid 
+                {% if is_state('binary_sensor.eve_door_20ebn9901_tur_4', 'on') %}
+                  rgba(255, 152, 0, 0.3)
+                {% else %}
+                  rgba(76, 175, 80, 0.2)
+                {% endif %};
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px 
+                {% if is_state('binary_sensor.eve_door_20ebn9901_tur_4', 'on') %}
+                  rgba(255, 152, 0, 0.3)
+                {% else %}
+                  rgba(76, 175, 80, 0.2)
+                {% endif %};
+            }
+      - type: custom:mushroom-title-card
+        title: 🍽️ Geschirrspüler
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 18px;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.geschirrspuler_betriebszustand
+            name: Status
+            icon: mdi:dishwasher
+            icon_color: |
+              {% if is_state('sensor.geschirrspuler_betriebszustand', 'run') %}
+                green
+              {% else %}
+                grey
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('sensor.geschirrspuler_betriebszustand', 'run') %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('sensor.geschirrspuler_betriebszustand', 'run') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('sensor.geschirrspuler_betriebszustand', 'run') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: select.geschirrspuler_aktives_programm
+            name: Programm
+            icon: mdi:dishwasher
+            icon_color: |
+              {% if is_state('sensor.geschirrspuler_betriebszustand', 'run') %}
+                green
+              {% else %}
+                grey
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('sensor.geschirrspuler_betriebszustand', 'run') %}
+                      rgba(33, 150, 243, 0.15) 0%, rgba(3, 169, 244, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('sensor.geschirrspuler_betriebszustand', 'run') %}
+                      rgba(33, 150, 243, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('sensor.geschirrspuler_betriebszustand', 'run') %}
+                      rgba(33, 150, 243, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.geschirrspuler_programm_fortschritt
+            name: ⏳ Fortschritt
+            icon: mdi:progress-clock
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(156, 39, 176, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(156, 39, 176, 0.2);
+                }
+          - type: custom:mushroom-entity-card
+            entity: sensor.geschirrspuler_programm_endzeit
+            name: 🕐 Ende
+            icon: mdi:clock-end
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(255, 193, 7, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
+                }
+      - type: custom:mushroom-title-card
+        title: 🥩 Meater Thermometer
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 18px;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: >-
+              sensor.meater_6ec44639acc6107a146fc3bde767ded9aa5795ab7819a1035fa28247a77df05f_cook_peak_temp
+            name: 🌡️ Kerntemperatur
+            icon: mdi:thermometer
+            icon_color: purple
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(156, 39, 176, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(156, 39, 176, 0.2);
+                }
+          - type: custom:mushroom-entity-card
+            entity: >-
+              sensor.meater_6ec44639acc6107a146fc3bde767ded9aa5795ab7819a1035fa28247a77df05f_cook_target_temp
+            name: 🎯 Zieltemperatur
+            icon: mdi:target
+            icon_color: blue
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(33, 150, 243, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(33, 150, 243, 0.2);
+                }
+          - type: custom:mushroom-entity-card
+            entity: >-
+              sensor.meater_6ec44639acc6107a146fc3bde767ded9aa5795ab7819a1035fa28247a77df05f_ambient
+            name: 🌡️ Umgebung
+            icon: mdi:thermometer-lines
+            icon_color: green
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(76, 175, 80, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.2);
+                }
+      - type: custom:apexcharts-card
+        header:
+          show: true
+          title: 🥩 Meater Temperaturen
+          show_states: true
+        series:
+          - entity: >-
+              sensor.meater_6ec44639acc6107a146fc3bde767ded9aa5795ab7819a1035fa28247a77df05f_cook_peak_temp
+            name: Kerntemperatur
+            color: '#9C27B0'
+            stroke_width: 3
+          - entity: >-
+              sensor.meater_6ec44639acc6107a146fc3bde767ded9aa5795ab7819a1035fa28247a77df05f_ambient
+            name: Umgebungstemperatur
+            color: '#4CAF50'
+            stroke_width: 3
+        chart_type: line
+        graph_span: 2h
+        apex_config:
+          chart:
+            animations:
+              enabled: true
+              easing: easeinout
+              speed: 800
+          stroke:
+            curve: smooth
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(156, 39, 176, 0.2);
+            }
+  - title: Schlafzimmer
+    path: Schlafzimmer
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: 🛏️ Schlafzimmer Dashboard
+        subtitle: Ruhe & Entspannung
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 💧 Luftfeuchtigkeit
+              show_states: true
+            series:
+              - entity: sensor.feuermelder_schlafzimmer_humidity
+                name: Luftfeuchtigkeit
+                color: '#2196F3'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+              yaxis:
+                min: 30
+                max: 70
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(33, 150, 243, 0.2);
+                }
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 🌡️ Temperatur
+              show_states: true
+            series:
+              - entity: sensor.feuermelder_schlafzimmer_temperature
+                name: Temperatur
+                color: '#FF6B6B'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+              yaxis:
+                min: 15
+                max: 30
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(255, 107, 107, 0.2);
+                }
+      - type: custom:better-thermostat-ui-card
+        entity: climate.schlafzimmer
+        disable_buttons: true
+        name: 🔥 Heizung
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(244, 67, 54, 0.2);
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px rgba(244, 67, 54, 0.2);
+            }
+      - type: custom:stack-in-card
+        cards:
+          - type: custom:mushroom-template-card
+            primary: 'Luftqualität: {{ states("sensor.feuermelder_schlafzimmer_aqi") }}'
+            secondary: >
+              {% if states("sensor.feuermelder_schlafzimmer_aqi") | int(0) <= 50
+              %}
+                Sehr gut 😊 - Perfekt zum Schlafen
+              {% elif states("sensor.feuermelder_schlafzimmer_aqi") | int(0) <=
+              100 %}
+                Mittel 😐 - Akzeptable Luftqualität
+              {% else %}
+                Schlecht 😷 - Lüften empfohlen!
+              {% endif %}
+            icon: mdi:air-filter
+            entity: sensor.feuermelder_schlafzimmer_aqi
+            icon_color: >
+              {% if states("sensor.feuermelder_schlafzimmer_aqi") | int(0) <= 50
+              %}
+                green
+              {% elif states("sensor.feuermelder_schlafzimmer_aqi") | int(0) <=
+              100 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            badge_icon: none
+            layout: horizontal
+            tap_action:
+              action: more-info
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if states('sensor.feuermelder_schlafzimmer_aqi') | int(0) <= 50 %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%
+                    {% elif states('sensor.feuermelder_schlafzimmer_aqi') | int(0) <= 100 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if states('sensor.feuermelder_schlafzimmer_aqi') | int(0) <= 50 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif states('sensor.feuermelder_schlafzimmer_aqi') | int(0) <= 100 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  animation: breathe 3s ease-in-out infinite;
+                }
+                @keyframes breathe {
+                  0%, 100% { transform: scale(1); }
+                  50% { transform: scale(1.02); }
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: 'CO₂: {{ states("sensor.feuermelder_schlafzimmer_co2") }} ppm'
+            secondary: >
+              {% set co2 = states('sensor.feuermelder_schlafzimmer_co2') |
+              int(0) %}
+
+              {% if co2 <= 400 %}
+                Ausgezeichnet 🌟 - Frische Außenluft
+              {% elif co2 <= 1000 %}
+                Gut 😊 - Normale Raumluft
+              {% elif co2 <= 1500 %}
+                Mäßig 😐 - Lüften empfohlen
+              {% elif co2 <= 2000 %}
+                Schlecht 😷 - Dringend lüften!
+              {% else %}
+                Kritisch ⚠️ - Sofort lüften!
+              {% endif %}
+            icon: mdi:molecule-co2
+            entity: sensor.feuermelder_schlafzimmer_co2
+            icon_color: >
+              {% set co2 = states('sensor.feuermelder_schlafzimmer_co2') |
+              int(0) %}
+
+              {% if co2 <= 400 %}
+                blue
+              {% elif co2 <= 1000 %}
+                green
+              {% elif co2 <= 1500 %}
+                orange
+              {% elif co2 <= 2000 %}
+                red
+              {% else %}
+                purple
+              {% endif %}
+            layout: vertical
+            tap_action:
+              action: more-info
+          - type: custom:mushroom-template-card
+            primary: 'VOC: {{ states("sensor.feuermelder_schlafzimmer_voc") }} ppb'
+            secondary: >
+              {% set voc = states('sensor.feuermelder_schlafzimmer_voc') |
+              int(0) %}
+
+              {% if voc <= 65 %}
+                Ausgezeichnet 🌟 - Sehr saubere Luft
+              {% elif voc <= 220 %}
+                Gut 😊 - Normale Luftqualität
+              {% elif voc <= 660 %}
+                Mäßig 😐 - Leichte Belastung
+              {% elif voc <= 2200 %}
+                Schlecht 😷 - Hohe Belastung
+              {% else %}
+                Kritisch ⚠️ - Sehr hohe Belastung
+              {% endif %}
+            icon: mdi:air-filter
+            entity: sensor.feuermelder_schlafzimmer_voc
+            icon_color: >
+              {% set voc = states('sensor.feuermelder_schlafzimmer_voc') |
+              int(0) %}
+
+              {% if voc <= 65 %}
+                blue
+              {% elif voc <= 220 %}
+                green
+              {% elif voc <= 660 %}
+                orange
+              {% elif voc <= 2200 %}
+                red
+              {% else %}
+                purple
+              {% endif %}
+            layout: vertical
+            tap_action:
+              action: more-info
+      - type: custom:mushroom-entity-card
+        entity: binary_sensor.schlafzimmerfenster_tur_6
+        name: 🪟 Schlafzimmerfenster
+        icon: mdi:window-closed-variant
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, 
+                {% if is_state('binary_sensor.schlafzimmerfenster_tur_6', 'on') %}
+                  rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                {% else %}
+                  rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%
+                {% endif %});
+              backdrop-filter: blur(10px);
+              border: 1px solid 
+                {% if is_state('binary_sensor.schlafzimmerfenster_tur_6', 'on') %}
+                  rgba(255, 152, 0, 0.3)
+                {% else %}
+                  rgba(76, 175, 80, 0.2)
+                {% endif %};
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px 
+                {% if is_state('binary_sensor.schlafzimmerfenster_tur_6', 'on') %}
+                  rgba(255, 152, 0, 0.3)
+                {% else %}
+                  rgba(76, 175, 80, 0.2)
+                {% endif %};
+            }
+  - title: Badezimmer
+    path: Badezimmer
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: 🛁 Badezimmer Dashboard
+        subtitle: Wellness & Hygiene
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #00BCD4 0%, #009688 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 💧 Luftfeuchtigkeit
+              show_states: true
+            series:
+              - entity: sensor.temperatursensor_badezimmer_humidity
+                name: Luftfeuchtigkeit
+                color: '#2196F3'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+              yaxis:
+                min: 30
+                max: 100
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(33, 150, 243, 0.2);
+                }
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 🌡️ Temperatur
+              show_states: true
+            series:
+              - entity: sensor.temperatursensor_badezimmer_temperature
+                name: Temperatur
+                color: '#FF6B6B'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+              yaxis:
+                min: 15
+                max: 30
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(255, 107, 107, 0.2);
+                }
+      - type: custom:better-thermostat-ui-card
+        entity: climate.badezimmer
+        disable_buttons: true
+        disable_window: true
+        name: 🔥 Heizung
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(244, 67, 54, 0.2);
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px rgba(244, 67, 54, 0.2);
+            }
+      - type: custom:mushroom-entity-card
+        entity: binary_sensor.eve_door_20ebn9901_tur_5
+        name: 🪟 Badezimmerfenster
+        icon: mdi:window-closed-variant
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, 
+                {% if is_state('binary_sensor.eve_door_20ebn9901_tur_5', 'on') %}
+                  rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                {% else %}
+                  rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%
+                {% endif %});
+              backdrop-filter: blur(10px);
+              border: 1px solid 
+                {% if is_state('binary_sensor.eve_door_20ebn9901_tur_5', 'on') %}
+                  rgba(255, 152, 0, 0.3)
+                {% else %}
+                  rgba(76, 175, 80, 0.2)
+                {% endif %};
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px 
+                {% if is_state('binary_sensor.eve_door_20ebn9901_tur_5', 'on') %}
+                  rgba(255, 152, 0, 0.3)
+                {% else %}
+                  rgba(76, 175, 80, 0.2)
+                {% endif %};
+            }
+  - title: Toilette
+    path: Toilette
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: 🚽 Toiletten Dashboard
+        subtitle: Komfort & Klima
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #9C27B0 0%, #673AB7 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 💧 Luftfeuchtigkeit
+              show_states: true
+            series:
+              - entity: sensor.temperatursensor_toilette_humidity
+                name: Luftfeuchtigkeit
+                color: '#2196F3'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+              yaxis:
+                min: 30
+                max: 80
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(33, 150, 243, 0.2);
+                }
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 🌡️ Temperatur
+              show_states: true
+            series:
+              - entity: sensor.temperatursensor_toilette_temperature
+                name: Temperatur
+                color: '#FF6B6B'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+              yaxis:
+                min: 15
+                max: 30
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(255, 107, 107, 0.2);
+                }
+      - type: custom:better-thermostat-ui-card
+        entity: climate.toilette
+        disable_summer: false
+        disable_window: true
+        disable_buttons: true
+        name: 🔥 Heizung
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(244, 67, 54, 0.2);
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px rgba(244, 67, 54, 0.2);
+            }
+      - type: custom:mushroom-entity-card
+        entity: binary_sensor.toilettenfenster_tur_6
+        name: 🪟 Toilettenfenster
+        icon: mdi:window-closed-variant
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, 
+                {% if is_state('binary_sensor.toilettenfenster_tur_6', 'on') %}
+                  rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                {% else %}
+                  rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%
+                {% endif %});
+              backdrop-filter: blur(10px);
+              border: 1px solid 
+                {% if is_state('binary_sensor.toilettenfenster_tur_6', 'on') %}
+                  rgba(255, 152, 0, 0.3)
+                {% else %}
+                  rgba(76, 175, 80, 0.2)
+                {% endif %};
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px 
+                {% if is_state('binary_sensor.toilettenfenster_tur_6', 'on') %}
+                  rgba(255, 152, 0, 0.3)
+                {% else %}
+                  rgba(76, 175, 80, 0.2)
+                {% endif %};
+            }
+  - title: Balkon
+    path: Balkon
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: ☀️ Balkon Dashboard
+        subtitle: Wetter & Solar
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #FF9800 0%, #FF5722 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+            }
+      - type: custom:mushroom-entity-card
+        entity: sensor.moon_phase
+        name: 🌙 Mondphase
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(103, 58, 183, 0.1) 0%, rgba(103, 58, 183, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(103, 58, 183, 0.2);
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px rgba(103, 58, 183, 0.2);
+            }
+      - type: custom:weather-card
+        entity: weather.forecast_home
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(3, 169, 244, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(33, 150, 243, 0.2);
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 12px 40px rgba(33, 150, 243, 0.2);
+            }
+      - type: custom:sun-card
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255, 193, 7, 0.2);
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 12px 40px rgba(255, 193, 7, 0.2);
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: switch.ip44_smart_plug_10a_matter
+            name: 🔌 Pumpe Regenwasser
+            icon: mdi:water-pump
+      - type: custom:apexcharts-card
+        header:
+          show: true
+          title: ⚡ Balkonkraftwerk Leistung
+          show_states: true
+        series:
+          - entity: sensor.balkonkraftwerk_leistung
+            name: Aktuelle Leistung
+            color: '#4CAF50'
+            stroke_width: 3
+        chart_type: line
+        graph_span: 1h
+        apex_config:
+          chart:
+            animations:
+              enabled: true
+              easing: easeinout
+              speed: 800
+          fill:
+            type: gradient
+            gradient:
+              shadeIntensity: 0.1
+              opacityFrom: 0.7
+              opacityTo: 0.5
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(76, 175, 80, 0.2);
+            }
+      - type: custom:apexcharts-card
+        header:
+          show: true
+          title: 📊 Solarproduktion Statistik
+          show_states: true
+        series:
+          - entity: sensor.balkonkraftwerk_leistung
+            name: Max Leistung
+            color: '#FF9800'
+            stroke_width: 3
+        chart_type: line
+        graph_span: 12h
+        apex_config:
+          chart:
+            animations:
+              enabled: true
+              easing: easeinout
+              speed: 800
+          fill:
+            type: gradient
+            gradient:
+              shadeIntensity: 0.1
+              opacityFrom: 0.7
+              opacityTo: 0.5
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 152, 0, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255, 152, 0, 0.2);
+            }
+  - title: Fenster
+    path: Fenster
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: 🪟 Fenster & Türen Übersicht
+        subtitle: Alle Öffnungssensoren im Überblick
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #2196F3 0%, #21CBF3 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: binary_sensor.eve_door_20ebn9901_tur_3
+            name: 🏠 Wohnzimmer groß
+            icon: mdi:window-closed-variant
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_3', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_3', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(76, 175, 80, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_3', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(76, 175, 80, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: binary_sensor.eve_door_20ebn9901_tur
+            name: 🏠 Wohnzimmer klein
+            icon: mdi:window-closed-variant
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(76, 175, 80, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(76, 175, 80, 0.2)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            name: 🛏️ Schlafzimmer
+            entity: binary_sensor.schlafzimmerfenster_tur_6
+            icon: mdi:window-closed-variant
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('binary_sensor.schlafzimmerfenster_tur_6', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('binary_sensor.schlafzimmerfenster_tur_6', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(76, 175, 80, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('binary_sensor.schlafzimmerfenster_tur_6', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(76, 175, 80, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            name: 🍳 Küche
+            entity: binary_sensor.eve_door_20ebn9901_tur_4
+            icon: mdi:window-closed-variant
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_4', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_4', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(76, 175, 80, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_4', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(76, 175, 80, 0.2)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            name: 🛁 Badezimmer
+            entity: binary_sensor.eve_door_20ebn9901_tur_5
+            icon: mdi:window-closed-variant
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_5', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_5', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(76, 175, 80, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('binary_sensor.eve_door_20ebn9901_tur_5', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(76, 175, 80, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            name: 🚽 Toilette
+            entity: binary_sensor.toilettenfenster_tur_6
+            icon: mdi:window-closed-variant
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('binary_sensor.toilettenfenster_tur_6', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('binary_sensor.toilettenfenster_tur_6', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(76, 175, 80, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('binary_sensor.toilettenfenster_tur_6', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(76, 175, 80, 0.2)
+                    {% endif %};
+                }
+      - type: custom:mushroom-entity-card
+        entity: binary_sensor.eve_door_20ebn9901_tur_2
+        name: 🖥️ Arbeitszimmer Tür
+        icon: mdi:door
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, 
+                {% if is_state('binary_sensor.eve_door_20ebn9901_tur_2', 'on') %}
+                  rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                {% else %}
+                  rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%
+                {% endif %});
+              backdrop-filter: blur(10px);
+              border: 1px solid 
+                {% if is_state('binary_sensor.eve_door_20ebn9901_tur_2', 'on') %}
+                  rgba(255, 152, 0, 0.3)
+                {% else %}
+                  rgba(76, 175, 80, 0.2)
+                {% endif %};
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px 
+                {% if is_state('binary_sensor.eve_door_20ebn9901_tur_2', 'on') %}
+                  rgba(255, 152, 0, 0.3)
+                {% else %}
+                  rgba(76, 175, 80, 0.2)
+                {% endif %};
+            }
+  - title: Steckdosen
+    path: Steckdosen
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: 🔌 Smart Steckdosen Übersicht
+        subtitle: Alle intelligenten Steckdosen im Überblick
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #4CAF50 0%, #8BC34A 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: switch.entertainment_system
+            name: 📺 Entertainment System
+            icon: mdi:television
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.entertainment_system', 'on') %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.entertainment_system', 'on') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.entertainment_system', 'on') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: switch.lautsprecher
+            name: 🔊 Lautsprecher
+            icon: mdi:speaker
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.lautsprecher', 'on') %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(139, 195, 74, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.lautsprecher', 'on') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.lautsprecher', 'on') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: switch.smart_home_zentrale
+            name: 🏠 Smart Home Zentrale
+            icon: mdi:home-automation
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.smart_home_zentrale', 'on') %}
+                      rgba(33, 150, 243, 0.15) 0%, rgba(3, 169, 244, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.smart_home_zentrale', 'on') %}
+                      rgba(33, 150, 243, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.smart_home_zentrale', 'on') %}
+                      rgba(33, 150, 243, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: switch.spulmaschine
+            name: 🍽️ Spülmaschine
+            icon: mdi:dishwasher
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.spulmaschine', 'on') %}
+                      rgba(255, 193, 7, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.spulmaschine', 'on') %}
+                      rgba(255, 193, 7, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.spulmaschine', 'on') %}
+                      rgba(255, 193, 7, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: switch.drucker
+            name: 🖨️ Drucker
+            icon: mdi:printer
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.drucker', 'on') %}
+                      rgba(156, 39, 176, 0.15) 0%, rgba(156, 39, 176, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.drucker', 'on') %}
+                      rgba(156, 39, 176, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.drucker', 'on') %}
+                      rgba(156, 39, 176, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: switch.homeoffice
+            name: 💻 Home Office
+            icon: mdi:desktop-tower-monitor
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.homeoffice', 'on') %}
+                      rgba(255, 87, 34, 0.15) 0%, rgba(255, 87, 34, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.homeoffice', 'on') %}
+                      rgba(255, 87, 34, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.homeoffice', 'on') %}
+                      rgba(255, 87, 34, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: switch.balkonkraftwerk
+            name: ☀️ Balkonkraftwerk
+            icon: mdi:solar-power
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.balkonkraftwerk', 'on') %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.balkonkraftwerk', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.balkonkraftwerk', 'on') %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: switch.gefrierschrank_e_bike
+            name: ❄️ Gefrierschrank
+            icon: mdi:fridge
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.gefrierschrank_e_bike', 'on') %}
+                      rgba(3, 169, 244, 0.15) 0%, rgba(3, 169, 244, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.gefrierschrank_e_bike', 'on') %}
+                      rgba(3, 169, 244, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.gefrierschrank_e_bike', 'on') %}
+                      rgba(3, 169, 244, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: switch.fritz_dect_200_19
+            name: 🧺 Waschmaschine
+            icon: mdi:washing-machine
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.fritz_dect_200_19', 'on') %}
+                      rgba(103, 58, 183, 0.15) 0%, rgba(103, 58, 183, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.fritz_dect_200_19', 'on') %}
+                      rgba(103, 58, 183, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.fritz_dect_200_19', 'on') %}
+                      rgba(103, 58, 183, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: switch.fritz_dect_200_20
+            name: 🔌 FRITZ!DECT 200
+            icon: mdi:power-socket-eu
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('switch.fritz_dect_200_20', 'on') %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('switch.fritz_dect_200_20', 'on') %}
+                      rgba(244, 67, 54, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('switch.fritz_dect_200_20', 'on') %}
+                      rgba(244, 67, 54, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: switch.ip44_smart_plug_10a_matter
+            name: 🔌 Pumpe Regenwasser
+            icon: mdi:water-pump
+  - title: Heizung
+    path: Heizung
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: 🔥 Heizungs Übersicht
+        subtitle: Alle Thermostate im Überblick
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #F44336 0%, #FF5722 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:better-thermostat-ui-card
+            entity: climate.wohnzimmer_gross
+            name: 🏠 Wohnzimmer Groß
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(244, 67, 54, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(244, 67, 54, 0.2);
+                }
+          - type: custom:better-thermostat-ui-card
+            entity: climate.wohnzimmer_klein
+            name: 🏠 Wohnzimmer Klein
+            eco_temperature: 18
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(244, 67, 54, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(244, 67, 54, 0.2);
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:better-thermostat-ui-card
+            name: 🖥️ Arbeitszimmer
+            entity: climate.arbeitszimmer
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 152, 0, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(255, 152, 0, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(255, 152, 0, 0.2);
+                }
+          - type: custom:better-thermostat-ui-card
+            name: 🛏️ Schlafzimmer
+            eco_temperature: 18
+            entity: climate.schlafzimmer
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(103, 58, 183, 0.1) 0%, rgba(103, 58, 183, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(103, 58, 183, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(103, 58, 183, 0.2);
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:better-thermostat-ui-card
+            name: 🍳 Küche
+            entity: climate.kuche
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(255, 193, 7, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
+                }
+          - type: custom:better-thermostat-ui-card
+            name: 🛁 Badezimmer
+            eco_temperature: 18
+            entity: climate.badezimmer
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(0, 188, 212, 0.1) 0%, rgba(0, 188, 212, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(0, 188, 212, 0.2);
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px rgba(0, 188, 212, 0.2);
+                }
+      - type: custom:better-thermostat-ui-card
+        name: 🚽 Toilette
+        entity: climate.toilette
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(156, 39, 176, 0.2);
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px rgba(156, 39, 176, 0.2);
+            }
+  - title: Lichter
+    path: Lichter
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: 💡 Beleuchtungs Übersicht
+        subtitle: Alle Lichter & Lampen im Überblick
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #FFC107 0%, #FF9800 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+            }
+      - type: custom:mushroom-title-card
+        title: 🏠 Wohnzimmer Beleuchtung
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 18px;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-light-card
+            entity: light.wohnzimmer_deckenlampe
+            name: 💡 Hauptlicht
+            use_light_color: true
+            show_brightness_control: true
+            show_color_temp_control: false
+            show_color_control: false
+            tap_action:
+              action: toggle
+            collapsible_controls: true
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('light.0x001788010b4921f9', 'on') %}
+                      rgba(255, 193, 7, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('light.0x001788010b4921f9', 'on') %}
+                      rgba(255, 193, 7, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('light.0x001788010b4921f9', 'on') %}
+                      rgba(255, 193, 7, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-light-card
+            entity: light.lichtschlauch_tv_area
+            name: 🌈 RGB Licht
+            use_light_color: true
+            show_brightness_control: true
+            collapsible_controls: true
+            show_color_control: true
+            show_color_temp_control: false
+            tap_action:
+              action: toggle
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('light.0x0017880109bf725d', 'on') %}
+                      rgba(255, 193, 7, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('light.0x0017880109bf725d', 'on') %}
+                      rgba(255, 193, 7, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('light.0x0017880109bf725d', 'on') %}
+                      rgba(255, 193, 7, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-light-card
+            use_light_color: true
+            show_brightness_control: true
+            show_color_temp_control: false
+            show_color_control: true
+            tap_action:
+              action: toggle
+            collapsible_controls: true
+            entity: light.stehlampe_wohnzimmer
+            name: 🎨 Stimmungslicht 1
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('light.0x001788010b99a29a', 'on') %}
+                      rgba(156, 39, 176, 0.15) 0%, rgba(156, 39, 176, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('light.0x001788010b99a29a', 'on') %}
+                      rgba(156, 39, 176, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('light.0x001788010b99a29a', 'on') %}
+                      rgba(156, 39, 176, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-light-card
+            use_light_color: true
+            show_brightness_control: true
+            collapsible_controls: true
+            show_color_control: true
+            show_color_temp_control: false
+            tap_action:
+              action: toggle
+            entity: light.lichtschlauch_heizung
+            name: 🎨 Stimmungslicht 2
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('light.0x001788010b9c1a93', 'on') %}
+                      rgba(33, 150, 243, 0.15) 0%, rgba(33, 150, 243, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('light.0x001788010b9c1a93', 'on') %}
+                      rgba(33, 150, 243, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('light.0x001788010b9c1a93', 'on') %}
+                      rgba(33, 150, 243, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: custom:mushroom-title-card
+        title: 🛏️ Weitere Beleuchtung
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 18px;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-light-card
+            use_light_color: true
+            show_brightness_control: true
+            show_color_temp_control: false
+            show_color_control: true
+            tap_action:
+              action: toggle
+            collapsible_controls: true
+            entity: light.lampe_flur_1
+            name: 💡 Zusatzlicht
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('light.0x001788010b998343', 'on') %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('light.0x001788010b998343', 'on') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('light.0x001788010b998343', 'on') %}
+                      rgba(76, 175, 80, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+          - type: custom:mushroom-light-card
+            use_light_color: true
+            show_brightness_control: true
+            collapsible_controls: true
+            show_color_control: true
+            show_color_temp_control: false
+            tap_action:
+              action: toggle
+            entity: light.nachttischlampe_schlafzimmer
+            name: 🛏️ Schlafzimmerlampe
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, 
+                    {% if is_state('light.schlafzimmerlampe', 'on') %}
+                      rgba(103, 58, 183, 0.15) 0%, rgba(103, 58, 183, 0.05) 100%
+                    {% else %}
+                      rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if is_state('light.schlafzimmerlampe', 'on') %}
+                      rgba(103, 58, 183, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if is_state('light.schlafzimmerlampe', 'on') %}
+                      rgba(103, 58, 183, 0.3)
+                    {% else %}
+                      rgba(158, 158, 158, 0.2)
+                    {% endif %};
+                }
+      - type: custom:mushroom-light-card
+        use_light_color: true
+        show_brightness_control: true
+        collapsible_controls: true
+        show_color_control: true
+        show_color_temp_control: false
+        tap_action:
+          action: toggle
+        entity: light.lichtschlauch_heizung
+        name: 🌟 Dekobeleuchtung
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, 
+                {% if is_state('light.0x0017880109c25d8c', 'on') %}
+                  rgba(255, 87, 34, 0.15) 0%, rgba(255, 87, 34, 0.05) 100%
+                {% else %}
+                  rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                {% endif %});
+              backdrop-filter: blur(10px);
+              border: 1px solid 
+                {% if is_state('light.0x0017880109c25d8c', 'on') %}
+                  rgba(255, 87, 34, 0.3)
+                {% else %}
+                  rgba(158, 158, 158, 0.2)
+                {% endif %};
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px 
+                {% if is_state('light.0x0017880109c25d8c', 'on') %}
+                  rgba(255, 87, 34, 0.3)
+                {% else %}
+                  rgba(158, 158, 158, 0.2)
+                {% endif %};
+            }
+  - title: Keller
+    path: Keller
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: 🏠 Keller Dashboard
+        subtitle: Haushaltsgeräte & Monitoring
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #607D8B 0%, #455A64 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: ⚡ Waschmaschine Leistung
+              show_states: true
+            series:
+              - entity: sensor.fritz_dect_200_19_leistung
+                name: Aktuelle Leistung
+                color: '#9C27B0'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(156, 39, 176, 0.2);
+                }
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: ❄️ Gefrierschrank Leistung
+              show_states: true
+            series:
+              - entity: sensor.gefrierschrank_e_bike_leistung
+                name: Aktuelle Leistung
+                color: '#03A9F4'
+                stroke_width: 3
+            chart_type: line
+            graph_span: 3h
+            apex_config:
+              chart:
+                animations:
+                  enabled: true
+                  easing: easeinout
+                  speed: 800
+              fill:
+                type: gradient
+                gradient:
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.7
+                  opacityTo: 0.5
+            card_mod:
+              style: |
+                ha-card {
+                  background: linear-gradient(135deg, rgba(3, 169, 244, 0.1) 0%, rgba(3, 169, 244, 0.05) 100%);
+                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(3, 169, 244, 0.2);
+                }
+      - type: custom:mushroom-entity-card
+        entity: switch.fritz_dect_200_19
+        name: 🧺 Waschmaschine
+        icon: mdi:washing-machine
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, 
+                {% if is_state('switch.fritz_dect_200_19', 'on') %}
+                  rgba(156, 39, 176, 0.15) 0%, rgba(156, 39, 176, 0.05) 100%
+                {% else %}
+                  rgba(158, 158, 158, 0.1) 0%, rgba(97, 97, 97, 0.05) 100%
+                {% endif %});
+              backdrop-filter: blur(10px);
+              border: 1px solid 
+                {% if is_state('switch.fritz_dect_200_19', 'on') %}
+                  rgba(156, 39, 176, 0.3)
+                {% else %}
+                  rgba(158, 158, 158, 0.2)
+                {% endif %};
+              transition: all 0.3s ease;
+            }
+            ha-card:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 8px 25px 
+                {% if is_state('switch.fritz_dect_200_19', 'on') %}
+                  rgba(156, 39, 176, 0.3)
+                {% else %}
+                  rgba(158, 158, 158, 0.2)
+                {% endif %};
+            }
+  - title: Batteriestatus
+    path: Batteriestatus
+    icon: ''
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: 🔋 Batteriestatus Übersicht
+        subtitle: Alle Gerätebatterien im Überblick
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #9C27B0 0%, #673AB7 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+            }
+      - type: custom:mushroom-title-card
+        title: 🏠 Wohnzimmer Batterien
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 18px;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.wohnzimmer_gross_batterie
+            name: 🔥 Heizung Groß
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.wohnzimmer_gross_batterie') | int(0)
+              %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  {% set level = states('sensor.wohnzimmer_gross_batterie') | int(0) %}
+                  background: linear-gradient(135deg, 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: sensor.wohnzimmer_klein_batterie
+            name: 🔥 Heizung Klein
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.wohnzimmer_klein_batterie') | int(0)
+              %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  {% set level = states('sensor.wohnzimmer_klein_batterie') | int(0) %}
+                  background: linear-gradient(135deg, 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.eve_door_20ebn9901_batterie_3
+            name: 🪟 Fenster Groß
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.eve_door_20ebn9901_batterie_3') |
+              int(0) %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  {% set level = states('sensor.eve_door_20ebn9901_batterie_3') | int(0) %}
+                  background: linear-gradient(135deg, 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.15) 0%, rgba(33, 150, 243, 0.05) 100%
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: sensor.eve_door_20ebn9901_batterie
+            name: 🪟 Fenster Klein
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.eve_door_20ebn9901_batterie') |
+              int(0) %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  {% set level = states('sensor.eve_door_20ebn9901_batterie') | int(0) %}
+                  background: linear-gradient(135deg, 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.15) 0%, rgba(33, 150, 243, 0.05) 100%
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.feuermelder_wohnzimmer_battery
+            name: 🌡️ Feuermelder
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.eve_door_20ebn9901_batterie_3') |
+              int(0) %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+          - type: custom:mushroom-entity-card
+            entity: sensor.fritz_dect_440_13_batterie
+            name: Fritz Smart Control
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.eve_door_20ebn9901_batterie') |
+              int(0) %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+      - type: custom:mushroom-title-card
+        title: 🖥️ Arbeitszimmer Batterien
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 18px;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.arbeitszimmer_batterie
+            name: 🔥 Heizung
+            icon: mdi:battery
+            icon_color: |
+              {% set level = states('sensor.arbeitszimmer_batterie') | int(0) %}
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  {% set level = states('sensor.arbeitszimmer_batterie') | int(0) %}
+                  background: linear-gradient(135deg, 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: sensor.eve_door_20ebn9901_batterie_2
+            name: 🚪 Tür
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.eve_door_20ebn9901_batterie_2') |
+              int(0) %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  {% set level = states('sensor.eve_door_20ebn9901_batterie_2') | int(0) %}
+                  background: linear-gradient(135deg, 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.15) 0%, rgba(33, 150, 243, 0.05) 100%
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                }
+      - type: custom:mushroom-entity-card
+        entity: sensor.feuermelder_arbeitszimmer_battery
+        name: 🌡️ Feuermelder
+        icon: mdi:battery
+        icon_color: >
+          {% set level = states('sensor.feuermelder_arbeitszimmer_battery') |
+          int(0) %}
+
+          {% if level >= 50 %}
+            green
+          {% elif level >= 20 %}
+            orange
+          {% else %}
+            red
+          {% endif %}
+      - type: custom:mushroom-title-card
+        title: 🍳 Küche Batterien
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 18px;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.kuche_batterie
+            name: 🔥 Heizung
+            icon: mdi:battery
+            icon_color: |
+              {% set level = states('sensor.kuche_batterie') | int(0) %}
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  {% set level = states('sensor.kuche_batterie') | int(0) %}
+                  background: linear-gradient(135deg, 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: sensor.eve_door_20ebn9901_batterie_4
+            name: 🪟 Fenster
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.eve_door_20ebn9901_batterie_4') |
+              int(0) %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  {% set level = states('sensor.eve_door_20ebn9901_batterie_4') | int(0) %}
+                  background: linear-gradient(135deg, 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.15) 0%, rgba(33, 150, 243, 0.05) 100%
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                }
+      - type: custom:mushroom-entity-card
+        entity: sensor.temperatursensor_kuche_battery
+        name: 🌡️ Temperatursensor
+        icon: mdi:battery
+        icon_color: >
+          {% set level = states('sensor.feuermelder_arbeitszimmer_battery') |
+          int(0) %}
+
+          {% if level >= 50 %}
+            green
+          {% elif level >= 20 %}
+            orange
+          {% else %}
+            red
+          {% endif %}
+      - type: custom:mushroom-title-card
+        title: 🛏️ Schlafzimmer Batterien
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 18px;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.schlafzimmer_batterie
+            name: 🔥 Heizung
+            icon: mdi:battery
+            icon_color: |
+              {% set level = states('sensor.schlafzimmer_batterie') | int(0) %}
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  {% set level = states('sensor.schlafzimmer_batterie') | int(0) %}
+                  background: linear-gradient(135deg, 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if level >= 50 %}
+                      rgba(76, 175, 80, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                }
+          - type: custom:mushroom-entity-card
+            entity: sensor.schlafzimmerfenster_batterie_6
+            name: 🪟 Fenster
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.schlafzimmerfenster_batterie_6') |
+              int(0) %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            card_mod:
+              style: |
+                ha-card {
+                  {% set level = states('sensor.schlafzimmerfenster_batterie_6') | int(0) %}
+                  background: linear-gradient(135deg, 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.15) 0%, rgba(33, 150, 243, 0.05) 100%
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.15) 0%, rgba(255, 152, 0, 0.05) 100%
+                    {% else %}
+                      rgba(244, 67, 54, 0.15) 0%, rgba(244, 67, 54, 0.05) 100%
+                    {% endif %});
+                  backdrop-filter: blur(10px);
+                  border: 1px solid 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                  transition: all 0.3s ease;
+                }
+                ha-card:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 25px 
+                    {% if level >= 50 %}
+                      rgba(33, 150, 243, 0.3)
+                    {% elif level >= 20 %}
+                      rgba(255, 152, 0, 0.3)
+                    {% else %}
+                      rgba(244, 67, 54, 0.3)
+                    {% endif %};
+                }
+      - type: custom:mushroom-entity-card
+        entity: sensor.feuermelder_schlafzimmer_battery
+        name: 🌡️ Feuermelder
+        icon: mdi:battery
+        icon_color: |
+          {% set level = states('sensor.0x000d6f0019c8fff7_battery') | int(0) %}
+          {% if level >= 50 %}
+            green
+          {% elif level >= 20 %}
+            orange
+          {% else %}
+            red
+          {% endif %}
+      - type: custom:mushroom-title-card
+        title: 🛁 Badezimmer & 🚽 Toilette Batterien
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 18px;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.badezimmer_batterie
+            name: 🔥 Heizung Bad
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.wohnzimmer_gross_batterie') | int(0)
+              %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+          - type: custom:mushroom-entity-card
+            entity: sensor.toilette_batterie
+            name: 🔥 Heizung Toilette
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.wohnzimmer_klein_batterie') | int(0)
+              %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.eve_door_20ebn9901_batterie_5
+            name: 🪟 Fenster Bad
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.eve_door_20ebn9901_batterie_3') |
+              int(0) %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            icon_type: icon
+          - type: custom:mushroom-entity-card
+            entity: sensor.toilettenfenster_batterie_6
+            name: 🪟 Fenster Toilette
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.eve_door_20ebn9901_batterie') |
+              int(0) %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.badezimmer_batterie
+            name: 🌡️ Temp Bad
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.eve_door_20ebn9901_batterie_3') |
+              int(0) %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+            icon_type: icon
+          - type: custom:mushroom-entity-card
+            entity: sensor.temperatursensor_toilette_battery
+            name: 🌡️ Temp Toilette
+            icon: mdi:battery
+            icon_color: >
+              {% set level = states('sensor.eve_door_20ebn9901_batterie') |
+              int(0) %}
+
+              {% if level >= 50 %}
+                green
+              {% elif level >= 20 %}
+                orange
+              {% else %}
+                red
+              {% endif %}
+  - title: Porsche
+    path: Porsche
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255,255,255,0.1);
+            }
+      - type: custom:mushroom-title-card
+        title: 🏎️ Porsche Dashboard
+        subtitle: Elektromobilität & Fahrzeugstatus
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(45deg, #D4AF37 0%, #FFD700 100%);
+              color: white;
+              text-align: center;
+              margin-bottom: 16px;
+              animation: shine 3s ease-in-out infinite;
+            }
+            @keyframes shine {
+              0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+              50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
+            }
+      - type: custom:ultra-vehicle-card
+        entity: device_tracker.porsche_taycan
+        show_slides: true
+        show_buttons: true
+        show_background: true
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(212, 175, 55, 0.3);
+              transition: all 0.3s ease;
+              animation: carPulse 4s ease-in-out infinite;
+            }
+            ha-card:hover {
+              transform: translateY(-3px) scale(1.01);
+              box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
+            }
+            @keyframes carPulse {
+              0%, 100% { border-color: rgba(212, 175, 55, 0.3); }
+              50% { border-color: rgba(255, 215, 0, 0.6); }
+            }
+      - type: custom:mushroom-title-card
+        title: 🔋 Batterie & Ladestatus
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 20px;
+              --title-font-weight: bold;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            name: 🔋 Batteriestand
+            icon: mdi:battery-charging
+            icon_color: >
+              {% set level = states('sensor.porsche_taycan_battery_level') |
+              int(0) %}
+
+              {% if level >= 80 %}
+                green
+              {% elif level >= 50 %}
+                orange
+              {% elif level >= 20 %}
+                yellow
+              {% else %}
+                red
+              {% endif %}
+            entity: sensor.state_of_charge
+          - type: custom:mushroom-entity-card
+            entity: sensor.charging_status
+            name: ⚡ Ladestatus
+            icon: mdi:ev-station
+            icon_color: >
+              {% if is_state('sensor.porsche_taycan_charging_status',
+              'Charging') %}
+                green
+              {% elif is_state('sensor.porsche_taycan_charging_status',
+              'Connected') %}
+                orange
+              {% else %}
+                grey
+              {% endif %}
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.remaining_range_electric
+            name: 🛣️ Reichweite
+            icon: mdi:map-marker-distance
+            icon_color: blue
+          - type: custom:mushroom-entity-card
+            entity: sensor.charging_power
+            name: ⚡ Ladeleistung
+            icon: mdi:lightning-bolt
+            icon_color: yellow
+      - type: custom:mushroom-title-card
+        title: 🚗 Fahrzeugstatus
+        card_mod:
+          style: |
+            ha-card {
+              background: transparent;
+              --title-font-size: 20px;
+              --title-font-weight: bold;
+              margin-top: 16px;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: lock.door_lock
+            name: 🔒 Türschloss
+            icon: mdi:car-door-lock
+            icon_color: |
+              {% if is_state('lock.porsche_taycan_doors', 'locked') %}
+                green
+              {% else %}
+                red
+              {% endif %}
+          - type: custom:mushroom-entity-card
+            entity: switch.remote_climatisation
+            name: 🌡️ Klimaanlage
+            icon: mdi:car-air-conditioning
+            icon_color: |
+              {% if is_state('climate.porsche_taycan_climate', 'on') %}
+                blue
+              {% else %}
+                grey
+              {% endif %}
+      - type: custom:apexcharts-card
+        header:
+          show: true
+          title: 🔋 Batterieverlauf (24h)
+          show_states: true
+        series:
+          - entity: sensor.state_of_charge
+            name: Batteriestand
+            color: '#4CAF50'
+            stroke_width: 3
+        chart_type: line
+        graph_span: 3h
+        apex_config:
+          chart:
+            animations:
+              enabled: true
+              easing: easeinout
+              speed: 800
+          fill:
+            type: gradient
+            gradient:
+              shadeIntensity: 0.1
+              opacityFrom: 0.7
+              opacityTo: 0.5
+          yaxis:
+            min: 0
+            max: 100
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(76, 175, 80, 0.3);
+              animation: chartGlow 4s ease-in-out infinite;
+            }
+            @keyframes chartGlow {
+              0%, 100% { box-shadow: 0 0 15px rgba(76, 175, 80, 0.2); }
+              50% { box-shadow: 0 0 25px rgba(76, 175, 80, 0.4); }
+            }
+      - type: custom:apexcharts-card
+        header:
+          show: true
+          title: ⚡ Ladeleistung Verlauf
+          show_states: true
+        series:
+          - entity: sensor.charging_power
+            name: Ladeleistung (kW)
+            color: '#FF9800'
+            stroke_width: 3
+        chart_type: line
+        graph_span: 3h
+        apex_config:
+          chart:
+            animations:
+              enabled: true
+              easing: easeinout
+              speed: 800
+          fill:
+            type: gradient
+            gradient:
+              shadeIntensity: 0.1
+              opacityFrom: 0.7
+              opacityTo: 0.5
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 152, 0, 0.05) 100%);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255, 152, 0, 0.3);
+              animation: powerChartGlow 2s ease-in-out infinite;
+            }
+            @keyframes powerChartGlow {
+              0%, 100% { box-shadow: 0 0 15px rgba(255, 152, 0, 0.2); }
+              50% { box-shadow: 0 0 25px rgba(255, 152, 0, 0.4); }
+            }
